@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\DivisiController;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -17,8 +19,27 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/dashboard', function(){
-    return view('back.dashboard');
+
+
+Route::prefix('back')->group(function(){
+
+    Route::get('/dashboard', function(){
+        return view('back.dashboard');
+    })->name('dashboard');
+
+    Route::prefix('divisi')->group(function(){
+        Route::get('/',[DivisiController::class,'index'])
+        ->name('divisi.index');
+        Route::post('/',[DivisiController::class,'store'])
+        ->name('divisi.store');
+        Route::get('/{divisi}/edit',[DivisiController::class,'edit'])
+        ->name('divisi.edit');
+        Route::put('/{divisi}/edit',[DivisiController::class,'update'])
+        ->name('divisi.update');
+        Route::delete('/{divisi}/delete',[DivisiController::class,'destroy'])
+        ->name('divisi.destroy');
+    });
+
 });
 
 Route::get('/login', function(){
