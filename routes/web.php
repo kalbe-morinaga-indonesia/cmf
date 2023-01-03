@@ -20,3 +20,11 @@ Route::get('/', function () {
 Route::get('/dashboard', function(){
     return view('back.dashboard');
 });
+
+Route::get('/login', function(){
+    return view('login');
+});
+
+Auth::routes();
+
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
