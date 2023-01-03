@@ -11,7 +11,7 @@ class DivisiController extends Controller
     public function index()
     {
         return view('back.master.divisi.index',[
-            'divisis' => Divisi::get()
+            'divisis' => Divisi::with('departments')->get()
         ]);
     }
 

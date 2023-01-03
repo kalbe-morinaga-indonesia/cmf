@@ -13,4 +13,8 @@ class Divisi extends Model
         'txtIdDivisi',
         'txtNamaDivisi'
     ];
+
+    public function departments(){
+        return $this->hasMany('App\Models\Department');
+    }
 }

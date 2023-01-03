@@ -5,7 +5,7 @@ namespace App\Http\Requests;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-class DivisiRequest extends FormRequest
+class DepartmentRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -25,24 +25,26 @@ class DivisiRequest extends FormRequest
     public function rules()
     {
         return [
-            'txtIdDivisi' => [
+            'txtIdDept' => [
                 'required',
-                'max:8',
-                Rule::unique('divisis')->ignore($this->divisi),
+                Rule::unique('departments')->ignore($this->department)
             ],
-            'txtNamaDivisi' => [
-                'required',
+            'txtNamaDept' => [
+                'required'
+            ],
+            'divisi_id' => [
+                'required'
             ]
         ];
     }
 
     public function messages()
     {
-        return [
-            'txtIdDivisi.required' => 'Id divisi wajib diisi',
-            'txtIdDivisi.max' => 'Id Divisi maksimal 8 karakter',
-            'txtIdDivisi.unique' => 'Id divisi sudah digunakan',
-            'txtNamaDivisi.required' => 'Nama divisi wajib diisi'
+        return[
+            'txtIdDept.required' => 'Id Department wajib diisi',
+            'txtIdDept.unique' => 'Id department sudah digunakan',
+            'txtNamaDept.required' => 'Nama department wajib diisi',
+            'divisi_id.required' => 'Divisi wajib diisi'
         ];
     }
 }

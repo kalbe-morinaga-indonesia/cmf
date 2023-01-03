@@ -15,6 +15,9 @@ return new class extends Migration
     {
         Schema::create('departments', function (Blueprint $table) {
             $table->id();
+            $table->string('txtIdDept')->unique();
+            $table->foreignId('divisi_id')->constrained()->onDelete('cascade');
+            $table->string('txtNamaDept');
             $table->timestamps();
         });
     }

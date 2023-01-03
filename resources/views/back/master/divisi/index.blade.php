@@ -52,6 +52,7 @@
                         <th>#</th>
                         <th>Id Divisi</th>
                         <th>Nama Divisi</th>
+                        <th>Daftar Department</th>
                         <th>Aksi</th>
                     </tr>
                 </thead>
@@ -61,6 +62,15 @@
                         <td>{{ $loop->iteration }}</td>
                         <td>{{ $divisi->txtIdDivisi }}</td>
                         <td>{{ $divisi->txtNamaDivisi }}</td>
+                        <td>
+                            @forelse ($divisi->departments as $department)
+                            <ol>
+                                <li>{{ $department->txtNamaDept }}</li>
+                            </ol>
+                            @empty
+                            <div class="alert alert-danger">Tidak ada department yang terdaftar</div>
+                            @endforelse
+                        </td>
                         <td>
                             <a href="{{ route('divisi.edit',['divisi' => $divisi->id]) }}" class="btn btn-primary">Edit</a>
                             <form action="{{ route('divisi.destroy',['divisi' => $divisi->id]) }}" method="post">

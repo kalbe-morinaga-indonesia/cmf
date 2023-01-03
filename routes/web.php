@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\DivisiController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -38,6 +39,19 @@ Route::prefix('back')->group(function(){
         ->name('divisi.update');
         Route::delete('/{divisi}/delete',[DivisiController::class,'destroy'])
         ->name('divisi.destroy');
+    });
+
+    Route::prefix('department')->group(function(){
+        Route::get('/',[DepartmentController::class,'index'])
+        ->name('department.index');
+        Route::post('/',[DepartmentController::class,'store'])
+        ->name('department.store');
+        Route::get('/{department}/edit',[DepartmentController::class,'edit'])
+        ->name('department.edit');
+        Route::put('/{department}/update',[DepartmentController::class,'update'])
+        ->name('department.update');
+        Route::delete('/{department}/delete',[DepartmentController::class,'destroy'])
+        ->name('department.destroy');
     });
 
 });

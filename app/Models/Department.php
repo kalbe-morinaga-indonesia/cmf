@@ -8,4 +8,14 @@ use Illuminate\Database\Eloquent\Model;
 class Department extends Model
 {
     use HasFactory;
+
+    protected $fillable = [
+        'txtIdDept',
+        'divisi_id',
+        'txtNamaDept',
+    ];
+
+    public function divisi(){
+        return $this->belongsTo('App\Models\Divisi');
+    }
 }
