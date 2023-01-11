@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\DivisiController;
+use App\Http\Controllers\SubdepartmentController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -52,6 +53,24 @@ Route::prefix('back')->group(function(){
         ->name('department.update');
         Route::delete('/{department}/delete',[DepartmentController::class,'destroy'])
         ->name('department.destroy');
+    });
+
+    Route::prefix('subdepartment')->group(function(){
+        Route::get('/',[SubdepartmentController::class,'index'])
+        ->name('subdepartment.index');
+        Route::post('/',[SubdepartmentController::class,'store'])
+        ->name('subdepartment.store');
+        Route::get('/{subdepartment}/edit',[SubdepartmentController::class,'edit'])
+        ->name('subdepartment.edit');
+        Route::put('/{subdepartment}/update',[SubdepartmentController::class,'update'])
+        ->name('subdepartment.update');
+        Route::delete('/{subdepartment}/delete',[SubdepartmentController::class,'destroy'])
+        ->name('subdepartment.destroy');
+    });
+
+    Route::prefix('users')->group(function (){
+        Route::get('/',[\App\Http\Controllers\UserController::class,'index'])
+        ->name('users.index');
     });
 
 });

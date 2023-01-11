@@ -51,5 +51,11 @@
           <div data-i18n="Basic">Department</div>
         </a>
     </li>
+    <li class="menu-item">
+        <a href="{{ route('subdepartment.index') }}" class="menu-link">
+          <i class="menu-icon tf-icons bx bx-collection"></i>
+          <div data-i18n="Basic">Subdepartment</div>
+        </a>
+    </li>
     </ul>
   </aside>
