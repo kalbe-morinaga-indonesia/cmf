@@ -21,9 +21,7 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-
-
-Route::prefix('back')->group(function(){
+Route::prefix('back')->middleware('auth')->group(function(){
 
     Route::get('/dashboard', function(){
         return view('back.dashboard');
@@ -70,13 +68,70 @@ Route::prefix('back')->group(function(){
 
     Route::prefix('users')->group(function (){
         Route::get('/',[\App\Http\Controllers\UserController::class,'index'])
-        ->name('users.index');
+            ->name('users.index');
+        Route::get('/create', [\App\Http\Controllers\UserController::class,'create'])
+            ->name('users.create');
+        Route::post('/create', [\App\Http\Controllers\UserController::class,'store'])
+            ->name('users.store');
+        Route::get('/{user}/edit',[\App\Http\Controllers\UserController::class,'edit'])
+            ->name('users.edit');
+        Route::put('/{user}/edit',[\App\Http\Controllers\UserController::class,'update'])
+            ->name('users.update');
+        Route::delete('/{user}/destroy',[\App\Http\Controllers\UserController::class,'destroy'])
+            ->name('users.destroy');
     });
 
-});
+    Route::prefix('role-and-permission')->group(function (){
+       Route::prefix('roles')->name('roles.')->group(function (){
+           Route::get('/', [\App\Http\Controllers\RoleController::class,'index'])
+           ->name('index');
+           Route::post('/',[\App\Http\Controllers\RoleController::class,'store'])
+               ->name('store');
+           Route::get('/{role}/edit',[\App\Http\Controllers\RoleController::class,'edit'])
+               ->name('edit');
+           Route::put('/{role}/edit',[\App\Http\Controllers\RoleController::class,'update'])
+               ->name('update');
+           Route::delete('/{role}/delete',[\App\Http\Controllers\RoleController::class,'destroy'])
+               ->name('destroy');
+       });
 
-Route::get('/login', function(){
-    return view('login');
+        Route::prefix('permissions')->name('permissions.')->group(function (){
+            Route::get('/', [\App\Http\Controllers\PermissionController::class,'index'])
+                ->name('index');
+            Route::post('/',[\App\Http\Controllers\PermissionController::class,'store'])
+                ->name('store');
+            Route::get('/{permission}/edit',[\App\Http\Controllers\PermissionController::class,'edit'])
+                ->name('edit');
+            Route::put('/{permission}/edit',[\App\Http\Controllers\PermissionController::class,'update'])
+                ->name('update');
+            Route::delete('/{permission}/delete',[\App\Http\Controllers\PermissionController::class,'destroy'])
+                ->name('destroy');
+        });
+
+        Route::prefix('assign-permission')->name('assign-permissions.')->group(function (){
+            Route::get('/', [\App\Http\Controllers\AssignPermissionController::class,'index'])
+                ->name('index');
+            Route::post('/',[\App\Http\Controllers\AssignPermissionController::class,'store'])
+                ->name('store');
+            Route::get('/{role}/edit',[\App\Http\Controllers\AssignPermissionController::class,'sync'])
+                ->name('sync');
+            Route::put('/{role}/edit',[\App\Http\Controllers\AssignPermissionController::class,'update'])
+                ->name('update');
+        });
+
+        Route::prefix('assign-user')->name('assign-users.')->group(function (){
+            Route::get('/', [\App\Http\Controllers\AssignUserController::class,'index'])
+                ->name('index');
+            Route::post('/',[\App\Http\Controllers\AssignUserController::class,'store'])
+                ->name('store');
+            Route::get('/{user}/edit',[\App\Http\Controllers\AssignUserController::class,'sync'])
+                ->name('sync');
+            Route::put('/{user}/edit',[\App\Http\Controllers\AssignUserController::class,'update'])
+                ->name('update');
+        });
+
+    });
+
 });
 
 Auth::routes();

@@ -63,13 +63,13 @@
                         <td>{{ $divisi->txtIdDivisi }}</td>
                         <td>{{ $divisi->txtNamaDivisi }}</td>
                         <td>
-                            @forelse ($divisi->departments as $department)
                             <ol>
+                            @forelse ($divisi->departments as $department)
                                 <li>{{ $department->txtNamaDept }}</li>
-                            </ol>
                             @empty
                             <div class="alert alert-danger">Tidak ada department yang terdaftar</div>
                             @endforelse
+                            </ol>
                         </td>
                         <td>
                             <a href="{{ route('divisi.edit',['divisi' => $divisi->id]) }}" class="btn btn-primary">Edit</a>

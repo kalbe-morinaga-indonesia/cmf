@@ -1,8 +1,8 @@
 <aside id="layout-menu" class="layout-menu menu-vertical menu bg-menu-theme">
     <div class="app-brand demo">
-      <a href="index.html" class="app-brand-link">
+      <a href="#" class="app-brand-link">
         <span class="app-brand-logo demo">
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" style="fill: #696cff;transform: ;msFilter:;"><path d="M19 4h-3V2h-2v2h-4V2H8v2H5c-1.103 0-2 .897-2 2v14c0 1.103.897 2 2 2h14c1.103 0 2-.897 2-2V6c0-1.103-.897-2-2-2zM5 20V7h14V6l.002 14H5z"></path><path d="M7 9h10v2H7zm0 4h5v2H7z"></path></svg>
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M19 4h-3V2h-2v2h-4V2H8v2H5c-1.103 0-2 .897-2 2v14c0 1.103.897 2 2 2h14c1.103 0 2-.897 2-2V6c0-1.103-.897-2-2-2zM5 20V7h14V6l.002 14H5z"></path><path d="M7 9h10v2H7zm0 4h5v2H7z"></path></svg>
         </span>
         <span class="app-brand-text demo menu-text fw-bolder ms-2">CMF Online</span>
       </a>
@@ -28,12 +28,12 @@
       </li>
       <li class="menu-item">
         <a href="javascript:void(0);" class="menu-link menu-toggle">
-          <i class="menu-icon tf-icons bx bx-dock-top"></i>
+          <i class="menu-icon tf-icons bx bx-user"></i>
           <div data-i18n="Account Settings">Users</div>
         </a>
         <ul class="menu-sub">
           <li class="menu-item">
-            <a href="p#" class="menu-link">
+            <a href="{{route('users.index')}}" class="menu-link">
               <div data-i18n="Account">User</div>
             </a>
           </li>
@@ -57,5 +57,41 @@
           <div data-i18n="Basic">Subdepartment</div>
         </a>
     </li>
+        <li class="menu-header small text-uppercase">
+            <span class="menu-header-text">Role and Permissions</span>
+        </li>
+        <li class="menu-item">
+            <a href="{{route('roles.index')}}" class="menu-link">
+                <i class="menu-icon tf-icons bx bx-building"></i>
+                <div data-i18n="Basic">Roles</div>
+            </a>
+        </li>
+        <li class="menu-item">
+            <a href="{{route('permissions.index')}}" class="menu-link">
+                <i class="menu-icon tf-icons bx bx-shield"></i>
+                <div data-i18n="Basic">Permissions</div>
+            </a>
+        </li>
+        <li class="menu-item">
+            <a href="{{route('assign-permissions.index')}}" class="menu-link">
+                <i class="menu-icon tf-icons bx bx-transfer"></i>
+                <div data-i18n="Basic">Assign Permissions</div>
+            </a>
+        </li>
+        <li class="menu-item">
+            <a href="{{route('assign-users.index')}}" class="menu-link">
+                <i class="menu-icon tf-icons bx bx-transfer-alt"></i>
+                <div data-i18n="Basic">Assign User</div>
+            </a>
+        </li>
+        <li class="menu-item">
+            <a class="menu-link" href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                <i class="menu-icon tf-icons bx bx-log-out"></i>
+                <div data-i18n="Basic">Logout</div>
+            </a>
+            <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+                @csrf
+            </form>
+        </li>
     </ul>
   </aside>

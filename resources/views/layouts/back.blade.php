@@ -24,6 +24,7 @@
     <link rel="stylesheet" href="{{asset('themes/sneat/css/demo.css')}}" />
     <link rel="stylesheet" href="{{asset('themes/sneat/vendor/libs/perfect-scrollbar/perfect-scrollbar.css')}}" />
     <link rel="stylesheet" href="{{asset('themes/sneat/vendor/libs/apex-charts/apex-charts.css')}}" />
+      @stack('style')
     <script src="{{asset('themes/sneat/vendor/js/helpers.js')}}"></script>
     <script src="{{asset('themes/sneat/js/config.js')}}"></script>
   </head>
