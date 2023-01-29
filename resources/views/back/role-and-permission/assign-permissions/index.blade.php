@@ -51,7 +51,7 @@
         <h5 class="card-header">Data Assign Permissions</h5>
         <div class="card-body">
             <div class="table-responsive">
-                <table class="table table-striped">
+                <table class="table table-striped" id="data-table">
                     <thead>
                     <tr>
                         <td>#</td>
@@ -61,7 +61,7 @@
                     </tr>
                     </thead>
                     <tbody>
-                    @forelse ($roles as $role)
+                    @foreach ($roles as $role)
                         <tr>
                             <td>{{ $loop->iteration }}</td>
                             <td>{{ $role->name }}</td>
@@ -74,16 +74,17 @@
                                 <a href="{{ route('assign-permissions.sync',['role' => $role->id]) }}" class="btn btn-warning">Sync</a>
                             </td>
                         </tr>
-                    @empty
-                        <tr>
-                            <td colspan="5">
-                                <div class="alert alert-danger">Tidak ada data</div>
-                            </td>
-                        </tr>
-                    @endforelse
+                    @endforeach
                     </tbody>
                 </table>
             </div>
         </div>
     </div>
 @endsection
+@push('script')
+    <script>
+        $(document).ready(function () {
+            $('#data-table').DataTable();
+        });
+    </script>
+@endpush

@@ -17,7 +17,7 @@
         <h5 class="card-header">Daftar Users</h5>
         <div class="card-body">
             <div class="table-responsive">
-                <table class="table table-striped">
+                <table class="table table-striped" id="data-table">
                     <thead>
                         <tr>
                             <th>#</th>
@@ -33,7 +33,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @forelse($users as $user)
+                        @foreach($users as $user)
                         <tr>
                             <td>{{$loop->iteration}}</td>
                             <td>{{$user->nik}}</td>
@@ -50,7 +50,7 @@
                             <td>{{$user->created_at->format('d M Y')}}</td>
                             <td>
                                 @if($user->email != auth()->user()->email)
-                                    <a href="{{route('users.edit',['user' => $user->id])}}" class="btn btn-dark">Edit</a>
+                                    <a href="{{route('users.edit',['user' => $user->id])}}" class="btn btn-dark mb-3">Edit</a>
                                     <form action="{{route('users.destroy',['user' => $user->id])}}" method="post">
                                         @method('DELETE')
                                         @csrf
@@ -59,13 +59,18 @@
                                 @endif
                             </td>
                         </tr>
-                        @empty
-                        @endforelse
+                        @endforeach
                     </tbody>
                 </table>
             </div>
         </div>
     </div>
-
-
 @endsection
+
+@push('script')
+    <script>
+        $(document).ready(function () {
+            $('#data-table').DataTable();
+        });
+    </script>
+@endpush

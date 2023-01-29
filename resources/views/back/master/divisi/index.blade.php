@@ -46,7 +46,7 @@
     <h5 class="card-header">Daftar Divisi</h5>
     <div class="card-body">
         <div class="table-responsive">
-            <table class="table table-striped">
+            <table class="table table-striped" id="data-table">
                 <thead>
                     <tr>
                         <th>#</th>
@@ -57,7 +57,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @forelse ($divisis as $divisi)
+                    @foreach ($divisis as $divisi)
                     <tr>
                         <td>{{ $loop->iteration }}</td>
                         <td>{{ $divisi->txtIdDivisi }}</td>
@@ -80,13 +80,7 @@
                             </form>
                         </td>
                     </tr>
-                    @empty
-                    <tr>
-                        <td colspan="4">
-                            <div class="alert alert-danger">Tidak ada data</div>
-                        </td>
-                    </tr>
-                    @endforelse
+                    @endforeach
                 </tbody>
             </table>
         </div>
@@ -94,3 +88,10 @@
 </div>
 
 @endsection
+@push('script')
+    <script>
+        $(document).ready(function () {
+            $('#data-table').DataTable();
+        });
+    </script>
+@endpush

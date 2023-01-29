@@ -56,7 +56,7 @@
     <h5 class="card-header">Data Subdepartemen</h5>
     <div class="card-body">
         <div class="table-responsive">
-            <table class="table table-striped">
+            <table class="table table-striped" id="data-table">
                 <thead>
                     <tr>
                         <td>#</td>
@@ -67,7 +67,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @forelse ($subdepartments as $subdepartment)
+                    @foreach ($subdepartments as $subdepartment)
                     <tr>
                         <td>{{ $loop->iteration }}</td>
                         <td>{{ $subdepartment->txtIdSubDept }}</td>
@@ -82,16 +82,17 @@
                             </form>
                         </td>
                     </tr>
-                    @empty
-                    <tr>
-                        <td colspan="5">
-                            <div class="alert alert-danger">Tidak ada data</div>
-                        </td>
-                    </tr>
-                    @endforelse
+                    @endforeach
                 </tbody>
             </table>
         </div>
     </div>
 </div>
 @endsection
+@push('script')
+    <script>
+        $(document).ready(function () {
+            $('#data-table').DataTable();
+        });
+    </script>
+@endpush

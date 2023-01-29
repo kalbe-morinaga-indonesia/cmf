@@ -24,6 +24,7 @@
     <link rel="stylesheet" href="{{asset('themes/sneat/css/demo.css')}}" />
     <link rel="stylesheet" href="{{asset('themes/sneat/vendor/libs/perfect-scrollbar/perfect-scrollbar.css')}}" />
     <link rel="stylesheet" href="{{asset('themes/sneat/vendor/libs/apex-charts/apex-charts.css')}}" />
+      <link rel="stylesheet" href="https://cdn.datatables.net/1.13.1/css/dataTables.bootstrap5.min.css">
       @stack('style')
     <script src="{{asset('themes/sneat/vendor/js/helpers.js')}}"></script>
     <script src="{{asset('themes/sneat/js/config.js')}}"></script>
@@ -172,6 +173,8 @@
     <script src="{{asset('themes/sneat/vendor/libs/apex-charts/apexcharts.js')}}"></script>
     <script src="{{asset('themes/sneat/js/main.js')}}"></script>
     <script src="{{asset('themes/sneat/js/dashboards-analytics.js')}}"></script>
+    <script src="https://cdn.datatables.net/1.13.1/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.1/js/dataTables.bootstrap5.min.js"></script>
     @stack('script')
   </body>
 </html>

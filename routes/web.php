@@ -27,7 +27,7 @@ Route::prefix('back')->middleware('auth')->group(function(){
         return view('back.dashboard');
     })->name('dashboard');
 
-    Route::prefix('divisi')->group(function(){
+    Route::prefix('divisi')->middleware('role:admin')->group(function(){
         Route::get('/',[DivisiController::class,'index'])
         ->name('divisi.index');
         Route::post('/',[DivisiController::class,'store'])
@@ -40,7 +40,7 @@ Route::prefix('back')->middleware('auth')->group(function(){
         ->name('divisi.destroy');
     });
 
-    Route::prefix('department')->group(function(){
+    Route::prefix('department')->middleware('role:admin')->group(function(){
         Route::get('/',[DepartmentController::class,'index'])
         ->name('department.index');
         Route::post('/',[DepartmentController::class,'store'])
@@ -53,7 +53,7 @@ Route::prefix('back')->middleware('auth')->group(function(){
         ->name('department.destroy');
     });
 
-    Route::prefix('subdepartment')->group(function(){
+    Route::prefix('subdepartment')->middleware('role:admin')->group(function(){
         Route::get('/',[SubdepartmentController::class,'index'])
         ->name('subdepartment.index');
         Route::post('/',[SubdepartmentController::class,'store'])
@@ -66,7 +66,7 @@ Route::prefix('back')->middleware('auth')->group(function(){
         ->name('subdepartment.destroy');
     });
 
-    Route::prefix('users')->group(function (){
+    Route::prefix('users')->middleware('role:admin')->group(function (){
         Route::get('/',[\App\Http\Controllers\UserController::class,'index'])
             ->name('users.index');
         Route::get('/create', [\App\Http\Controllers\UserController::class,'create'])
@@ -81,7 +81,7 @@ Route::prefix('back')->middleware('auth')->group(function(){
             ->name('users.destroy');
     });
 
-    Route::prefix('role-and-permission')->group(function (){
+    Route::prefix('role-and-permission')->middleware('role:admin')->group(function (){
        Route::prefix('roles')->name('roles.')->group(function (){
            Route::get('/', [\App\Http\Controllers\RoleController::class,'index'])
            ->name('index');
@@ -143,6 +143,16 @@ Route::prefix('back')->middleware('auth')->group(function(){
             ->name('settings.index');
         Route::put('/',[\App\Http\Controllers\UserController::class,'changePassword'])
             ->name('settings.change-password');
+    });
+
+    Route::prefix('cmf')->group(function (){
+        Route::get('/',[\App\Http\Controllers\CmfController::class,'index'])
+            ->name('cmf.index');
+        Route::get('/create',[\App\Http\Controllers\CmfController::class,'create'])
+            ->name('cmf.create');
+        Route::post('/create',[\App\Http\Controllers\CmfController::class,'store'])
+            ->name('cmf.store');
+        Route::get('/{slug}/detail',[\App\Http\Controllers\CmfController::class,'detail'])->name('cmf.detail');
     });
 
 });

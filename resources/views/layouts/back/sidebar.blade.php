@@ -23,33 +23,34 @@
         </a>
       </li>
 
-      <li class="menu-header small text-uppercase">
-        <span class="menu-header-text">Master</span>
-      </li>
+        @role('admin')
+        <li class="menu-header small text-uppercase">
+            <span class="menu-header-text">Master</span>
+        </li>
         <li class="menu-item">
             <a href="{{route('users.index')}}" class="menu-link">
                 <i class="menu-icon tf-icons bx bx-user"></i>
                 <div data-i18n="Account">Users</div>
             </a>
         </li>
-      <li class="menu-item">
-          <a href="{{ route('divisi.index') }}" class="menu-link">
-            <i class="menu-icon tf-icons bx bx-collection"></i>
-            <div data-i18n="Basic">Divisi</div>
-          </a>
-      </li>
-      <li class="menu-item">
-        <a href="{{ route('department.index') }}" class="menu-link">
-          <i class="menu-icon tf-icons bx bx-collection"></i>
-          <div data-i18n="Basic">Department</div>
-        </a>
-    </li>
-    <li class="menu-item">
-        <a href="{{ route('subdepartment.index') }}" class="menu-link">
-          <i class="menu-icon tf-icons bx bx-collection"></i>
-          <div data-i18n="Basic">Subdepartment</div>
-        </a>
-    </li>
+        <li class="menu-item">
+            <a href="{{ route('divisi.index') }}" class="menu-link">
+                <i class="menu-icon tf-icons bx bx-collection"></i>
+                <div data-i18n="Basic">Divisi</div>
+            </a>
+        </li>
+        <li class="menu-item">
+            <a href="{{ route('department.index') }}" class="menu-link">
+                <i class="menu-icon tf-icons bx bx-collection"></i>
+                <div data-i18n="Basic">Department</div>
+            </a>
+        </li>
+        <li class="menu-item">
+            <a href="{{ route('subdepartment.index') }}" class="menu-link">
+                <i class="menu-icon tf-icons bx bx-collection"></i>
+                <div data-i18n="Basic">Subdepartment</div>
+            </a>
+        </li>
         <li class="menu-header small text-uppercase">
             <span class="menu-header-text">Role and Permissions</span>
         </li>
@@ -77,6 +78,24 @@
                 <div data-i18n="Basic">Assign User</div>
             </a>
         </li>
+        @endrole
+        @role('pic')
+        <li class="menu-header small text-uppercase">
+            <span class="menu-header-text">CMF</span>
+        </li>
+        <li class="menu-item">
+            <a href="{{route('cmf.create')}}" class="menu-link">
+                <i class="menu-icon tf-icons bx bx-add-to-queue"></i>
+                <div data-i18n="Account">Buat CMF</div>
+            </a>
+        </li>
+        <li class="menu-item">
+            <a href="{{route('cmf.index')}}" class="menu-link">
+                <i class="menu-icon tf-icons bx bx-task"></i>
+                <div data-i18n="Account">Pengajuan CMF</div>
+            </a>
+        </li>
+        @endrole
         <li class="menu-item">
             <a class="menu-link" href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                 <i class="menu-icon tf-icons bx bx-log-out"></i>
