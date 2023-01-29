@@ -129,7 +129,20 @@ Route::prefix('back')->middleware('auth')->group(function(){
             Route::put('/{user}/edit',[\App\Http\Controllers\AssignUserController::class,'update'])
                 ->name('update');
         });
+    });
 
+    Route::prefix('my-profile')->group(function (){
+        Route::get('/',[\App\Http\Controllers\UserController::class,'profile'])
+            ->name('profiles.index');
+        Route::put('/',[\App\Http\Controllers\UserController::class,'updateProfile'])
+            ->name('profiles.update');
+    });
+
+    Route::prefix('setting')->group(function (){
+        Route::get('/',[\App\Http\Controllers\UserController::class,'setting'])
+            ->name('settings.index');
+        Route::put('/',[\App\Http\Controllers\UserController::class,'changePassword'])
+            ->name('settings.change-password');
     });
 
 });

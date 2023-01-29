@@ -12,7 +12,7 @@ class UserRequest extends FormRequest
         return [
             'nik' => [
                 Rule::unique('users','nik')->ignore($this->user->nik ?? null, 'nik'),
-                'required',
+                Rule::requiredIf($this->isMethod('post')),
             ],
             'name' => [
                 'required'

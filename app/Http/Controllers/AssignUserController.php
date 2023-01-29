@@ -11,7 +11,7 @@ class AssignUserController extends Controller
 {
     public function index()
     {
-        $users = User::with('roles')->has('roles')->get();
+        $users = User::with('roles')->get();
         $roles = Role::get();
         return view('back.role-and-permission.assign-users.index', compact(
             'roles',

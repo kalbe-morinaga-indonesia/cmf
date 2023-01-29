@@ -7,6 +7,7 @@ use App\Models\Department;
 use App\Models\Subdepartment;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
@@ -112,5 +113,78 @@ class UserController extends Controller
         return redirect()
             ->route('users.index')
             ->with('message',"Berhasil menghapus user");
+    }
+
+    public function profile()
+    {
+        $departments = Department::get();
+        $subdepartments = Subdepartment::get();
+        return view('back.master.users.profiles.index', compact(
+            'departments',
+            'subdepartments'
+        ));
+    }
+
+    public function updateProfile(UserRequest $request)
+    {
+        $user = User::findOrFail(auth()->user()->id);
+        if($request->hasFile('avatar') && $request->hasFile('signature')){
+            $slug = $request['name'];
+            $extFile = $request->avatar->getClientOriginalExtension();
+            $extFileSignature = $request->signature->getClientOriginalExtension();
+            $nameFile = $slug.'-'.time().".".$extFile;
+            $nameFileSignature = $slug.'-'.time()."-signature.".$extFileSignature;
+            $request->avatar->storeAs('public/uploads/users/',$nameFile);
+            $request->signature->storeAs('public/uploads/signature/',$nameFileSignature);
+            $user->update([
+                'name' => $request['name'],
+                'signature' => $nameFileSignature,
+                'avatar' => $nameFile,
+                'department_id' => $request['department'],
+                'subdepartment_id' => $request['subdepartment'] ?? null
+            ]);
+        }else{
+            $user->update([
+                'name' => $request['name'],
+                'department_id' => $request['department'],
+                'subdepartment_id' => $request['subdepartment'] ?? null
+            ]);
+        }
+
+        return redirect()
+            ->route('profiles.index')
+            ->with('message',"Berhasil memperbaharui profile");
+    }
+
+    public function setting()
+    {
+        return view('back.master.users.settings.index');
+    }
+
+    public function changePassword(Request $request)
+    {
+        $request->validate([
+            'password_old' => [
+                'required',
+            ],
+            'password_new' => [
+                'required',
+                'min:8',
+                'confirmed'
+            ]
+        ]);
+
+        if(!Hash::check($request->password_old, auth()->user()->password)){
+            return back()->with('error','Password lama salah');
+        }
+
+        User::whereId(auth()->user()->id)->update([
+            'password' => Hash::make($request->password_new)
+        ]);
+
+
+        return back()
+            ->with('message','Password berhasil diperbaharui');
+
     }
 }
