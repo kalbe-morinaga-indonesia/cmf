@@ -18,12 +18,20 @@ class DivisiSeeder extends Seeder
             'txtNamaDivisi' => 'Suporting'
         ]);
         Divisi::create([
+            'txtIdDivisi' => 'DVI-0003',
+            'txtNamaDivisi' => 'BOD'
+        ]);
+        Divisi::create([
             'txtIdDivisi' => 'DVI-0004',
             'txtNamaDivisi' => 'Klinik'
         ]);
         Divisi::create([
             'txtIdDivisi' => 'DVI-0005',
             'txtNamaDivisi' => 'PKL'
+        ]);
+        Divisi::create([
+            'txtIdDivisi' => 'DVI-0006',
+            'txtNamaDivisi' => 'Serikat'
         ]);
     }
 }
