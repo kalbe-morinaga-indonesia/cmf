@@ -1,10 +1,10 @@
 <aside id="layout-menu" class="layout-menu menu-vertical menu bg-menu-theme">
     <div class="app-brand demo">
-      <a href="#" class="app-brand-link">
+      <a href="{{route('dashboard')}}" class="app-brand-link">
         <span class="app-brand-logo demo">
           <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M19 4h-3V2h-2v2h-4V2H8v2H5c-1.103 0-2 .897-2 2v14c0 1.103.897 2 2 2h14c1.103 0 2-.897 2-2V6c0-1.103-.897-2-2-2zM5 20V7h14V6l.002 14H5z"></path><path d="M7 9h10v2H7zm0 4h5v2H7z"></path></svg>
         </span>
-        <span class="app-brand-text demo menu-text fw-bolder ms-2">CMF Online</span>
+        <span class="app-brand-text demo menu-text fw-bolder ms-2 text-uppercase">CMF</span>
       </a>
 
       <a href="javascript:void(0);" class="layout-menu-toggle menu-link text-large ms-auto d-block d-xl-none">
@@ -93,6 +93,17 @@
             <a href="{{route('cmf.index')}}" class="menu-link">
                 <i class="menu-icon tf-icons bx bx-task"></i>
                 <div data-i18n="Account">Pengajuan CMF</div>
+            </a>
+        </li>
+        @endrole
+        @role('depthead pic')
+        <li class="menu-header small text-uppercase">
+            <span class="menu-header-text">CMF</span>
+        </li>
+        <li class="menu-item">
+            <a href="{{route('cmf.index')}}" class="menu-link">
+                <i class="menu-icon tf-icons bx bx-task"></i>
+                <div data-i18n="Account">Request Perubahan CMF</div>
             </a>
         </li>
         @endrole

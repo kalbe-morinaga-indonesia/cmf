@@ -32,6 +32,7 @@ class Cmf extends Model
         'status_pengajuan',
         'department_id',
         'subdepartment_id',
+        'step',
         'inserted_by',
         'updated_by'
     ];

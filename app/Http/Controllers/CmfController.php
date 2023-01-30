@@ -5,9 +5,12 @@ namespace App\Http\Controllers;
 use App\Models\Cmf;
 use App\Models\Department;
 use App\Models\Risk;
+use App\Models\Signature;
 use App\Models\Subdepartment;
+use App\Models\User;
 use Illuminate\Support\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class CmfController extends Controller
 {
@@ -84,8 +87,68 @@ class CmfController extends Controller
     public function detail($slug)
     {
         $cmf = Cmf::where('slug', $slug)->firstOrFail();
+        $check_signature = Signature::where([
+            ['cmf_id', $cmf->id],
+            ['user_id', auth()->user()->id],
+        ])->first();
         return view('back.cmf.detail', compact(
-            'cmf'
+            'cmf',
+            'check_signature',
         ));
+    }
+
+    public function signature($slug, Request $request)
+    {
+        if(auth()->user()->hasRole('depthead pic')){
+            $cmf = Cmf::where('slug', $slug)->firstOrFail();
+            $user = User::find(auth()->user()->id);
+            DB::transaction(function () use($cmf, $user, $request){
+                if($request->hasFile('signature')){
+                    $slug = auth()->user()->name;
+                    $extFileSignature = $request->signature->getClientOriginalExtension();
+                    $nameFileSignature = $slug.'-'.time()."-signature.".$extFileSignature;
+                    $request->signature->storeAs('public/uploads/signature/',$nameFileSignature);
+                    $user->update([
+                        'signature' => $nameFileSignature,
+                    ]);
+                }
+
+                Signature::firstOrCreate([
+                    'cmf_id' => $cmf->id,
+                    'user_id' => auth()->user()->id,
+                    'is_signature' => 1,
+                    'step' => 1
+                ]);
+
+                $cmf->update([
+                    'status_pengajuan' => 'Pengajuan Request Perubahan Disetujui PIC',
+                    'step' => 3,
+                    'updated_by' => $user->name
+                ]);
+            });
+            return back()
+                ->with('message','Request Perubahan CMF Berhasil disetujui');
+        }else{
+            abort(403);
+        }
+
+    }
+
+    public function revised($slug)
+    {
+        $cmf = Cmf::where('slug', $slug)->firstOrFail();
+        $cmf->update([
+            'status_pengajuan' => 'Pengajuan Request Perubahan Tidak Disetujui PIC',
+            'step' => 2,
+            'updated_by' => auth()->user()->name
+        ]);
+        Signature::updateOrCreate([
+            'cmf_id' => $cmf->id,
+            'user_id' => auth()->user()->id,
+            'is_signature' => 0,
+            'step' => 1
+        ]);
+        return back()
+            ->with('message','Request Perubahan CMF tidak disetujui');
     }
 }

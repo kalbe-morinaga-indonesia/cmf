@@ -152,7 +152,12 @@ Route::prefix('back')->middleware('auth')->group(function(){
             ->name('cmf.create');
         Route::post('/create',[\App\Http\Controllers\CmfController::class,'store'])
             ->name('cmf.store');
-        Route::get('/{slug}/detail',[\App\Http\Controllers\CmfController::class,'detail'])->name('cmf.detail');
+        Route::get('/{slug}/detail',[\App\Http\Controllers\CmfController::class,'detail'])
+            ->name('cmf.detail');
+        Route::post('/{slug}/signature',[\App\Http\Controllers\CmfController::class,'signature'])
+            ->name('cmf.signature');
+        Route::post('/{slug}/revised',[\App\Http\Controllers\CmfController::class,'revised'])
+            ->name('cmf.revised');
     });
 
 });
