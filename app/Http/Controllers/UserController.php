@@ -77,13 +77,35 @@ class UserController extends Controller
 
     public function update(UserRequest $request, User $user)
     {
-        if($request->hasFile('avatar') && $request->hasFile('signature')){
-            $slug = $request['name'];
+        $slug = $request['name'];
+        if($request->hasFile('avatar')){
             $extFile = $request->avatar->getClientOriginalExtension();
-            $extFileSignature = $request->signature->getClientOriginalExtension();
             $nameFile = $slug.'-'.time().".".$extFile;
-            $nameFileSignature = $slug.'-'.time()."-signature.".$extFileSignature;
             $request->avatar->storeAs('public/uploads/users/',$nameFile);
+            $user->update([
+                'nik' => $request['nik'],
+                'name' => $request['name'],
+                'avatar' => $nameFile,
+                'department_id' => $request['department'],
+                'subdepartment_id' => $request['subdepartment'] ?? null
+            ]);
+        }elseif($request->hasFile('signature')){
+            $extFileSignature = $request->signature->getClientOriginalExtension();
+            $nameFileSignature = $slug.'-'.time()."-signature.".$extFileSignature;
+            $request->signature->storeAs('public/uploads/signature/',$nameFileSignature);
+            $user->update([
+                'nik' => $request['nik'],
+                'name' => $request['name'],
+                'signature' => $nameFileSignature,
+                'department_id' => $request['department'],
+                'subdepartment_id' => $request['subdepartment'] ?? null
+            ]);
+        }elseif($request->hasFile('avatar') && $request->hasFile('signature')){
+            $extFile = $request->avatar->getClientOriginalExtension();
+            $nameFile = $slug.'-'.time().".".$extFile;
+            $request->avatar->storeAs('public/uploads/users/',$nameFile);
+            $extFileSignature = $request->signature->getClientOriginalExtension();
+            $nameFileSignature = $slug.'-'.time()."-signature.".$extFileSignature;
             $request->signature->storeAs('public/uploads/signature/',$nameFileSignature);
             $user->update([
                 'nik' => $request['nik'],
@@ -93,7 +115,7 @@ class UserController extends Controller
                 'department_id' => $request['department'],
                 'subdepartment_id' => $request['subdepartment'] ?? null
             ]);
-        }else{
+        } else{
             $user->update([
                 'nik' => $request['nik'],
                 'name' => $request['name'],

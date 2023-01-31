@@ -128,10 +128,11 @@ class CmfController extends Controller
             ['step', 7],
         ])->first();
 
-        $check_signature_step_7_get = $check_signature_step_7 = Signature::where([
+        $check_signature_step_7_get = Signature::where([
             ['cmf_id', $cmf->id],
             ['step', 7],
         ])->get();
+
 
         $signature_reviews = $check_signature_step_2->each(function ($val, $key){
             Review::whereIn('signature_id', $val)->get();
@@ -166,6 +167,7 @@ class CmfController extends Controller
             'check_signature_step_5',
             'check_signature_step_6',
             'check_signature_step_7',
+            'check_signature_step_7_get',
             'signature_evaluations',
             'check_signature_step_8',
             'check_signature_step_9'

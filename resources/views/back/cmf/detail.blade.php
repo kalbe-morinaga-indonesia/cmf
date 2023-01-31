@@ -268,7 +268,7 @@
                                             <div class="col-lg-3">
                                                 <p class="text-center text-dark card-header">Disetujui Oleh</p>
                                                 <div class="text-center">
-                                                    <img src="{{asset('storage/uploads/signature/'. $check_signature_step_1->user->signature)}}" alt="" height="80">
+                                                    <img src="{{asset('storage/uploads/signature/'. $review->user->signature)}}" alt="" height="80">
                                                     <p class="text-dark">{{$review->review->signature->user->name}}</p>
                                                 </div>
                                             </div>
@@ -395,7 +395,7 @@
                                             <div class="col-lg-3">
                                                 <p class="text-center text-dark card-header">Disetujui Oleh</p>
                                                 <div class="text-center">
-                                                    <img src="{{asset('storage/uploads/signature/'. $check_signature_step_1->user->signature)}}" alt="" height="80">
+                                                    <img src="{{asset('storage/uploads/signature/'. $review->user->signature)}}" alt="" height="80">
                                                     <p class="text-dark">{{$review->review->signature->user->name}}</p>
                                                 </div>
                                             </div>
@@ -521,7 +521,7 @@
                                             <div class="col-lg-3">
                                                 <p class="text-center text-dark card-header">Disetujui Oleh</p>
                                                 <div class="text-center">
-                                                    <img src="{{asset('storage/uploads/signature/'. $check_signature_step_1->user->signature)}}" alt="" height="80">
+                                                    <img src="{{asset('storage/uploads/signature/'. $review->user->signature)}}" alt="" height="80">
                                                     <p class="text-dark">{{$review->review->signature->user->name}}</p>
                                                 </div>
                                             </div>

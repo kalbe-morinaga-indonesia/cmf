@@ -73,7 +73,7 @@
                         <div class="row mb-4">
                             <div class="col-lg-6">
                                 <label for="signature" class="form-label">Tanda Tangan<span class="text-danger">*</span></label>
-                                <input type="file" name="signature" id="signature" class="dropify" data-allowed-file-extensions="jpg jpeg png webp" data-max-file-size-preview="3M" data-default-file="{{asset('storage/uploads/signature/'.$user->signature)}}">
+                                <input type="file" name="signature" id="signature" class="dropify" data-allowed-file-extensions="jpg jpeg png webp" data-max-file-size-preview="5M" data-default-file="{{asset('storage/uploads/signature/'.$user->signature)}}">
                             </div>
                             <div class="col-lg-6">
                                 <label for="avatar" class="form-label">Photo Profile<span class="text-danger">*</span></label>

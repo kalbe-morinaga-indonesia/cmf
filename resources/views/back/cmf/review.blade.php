@@ -210,7 +210,7 @@
                                             <div class="col-lg-3">
                                                 <p class="text-center text-dark card-header">Disetujui Oleh</p>
                                                 <div class="text-center">
-                                                    <img src="{{asset('storage/uploads/signature/'. $check_signature_step_1->user->signature)}}" alt="" height="80">
+                                                    <img src="{{asset('storage/uploads/signature/'. $review->user->signature)}}" alt="" height="80">
                                                     <p class="text-dark">{{$review->review->signature->user->name}}</p>
                                                 </div>
                                             </div>
@@ -299,7 +299,7 @@
                                 <i class="bx bx-check-circle me-1"></i> Request perubahan CMF berhasil di evaluasi dan verifikasi
                             </div>
                             <div class="text-end">
-                                <button type="button" class="btn btn-dark btn-sm" data-bs-toggle="modal" data-bs-target="#reviewModalEvaluasiVerifikasi"><i class="bx bx-note me-2"></i>Cek Catatan</button>
+                                <button type="button" class="btn btn-dark btn-sm" data-bs-toggle="modal" data-bs-target="#reviewModalEvaluasiVerifikasi"><i class="bx bx-note me-2"></i>Cek Evaluasi</button>
                             </div>
                         @else
                             <div class="d-block d-grid gap-2">
