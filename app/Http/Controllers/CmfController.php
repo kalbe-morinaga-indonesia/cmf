@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Activity;
 use App\Models\Cmf;
 use App\Models\Department;
+use App\Models\Evaluation;
 use App\Models\Review;
 use App\Models\Risk;
 use App\Models\Signature;
@@ -94,6 +96,11 @@ class CmfController extends Controller
 
         $depthead_area_terkait = CMF::withCount('departments')->where('slug', $slug)->first();
 
+        $check_signature = Signature::where([
+            ['cmf_id', $cmf->id],
+            ['user_id', auth()->user()->id],
+        ])->first();
+
         $check_signature_step_1 = Signature::where([
             ['cmf_id', $cmf->id],
             ['step', 1],
@@ -105,17 +112,203 @@ class CmfController extends Controller
         ])->get();
         $check_signature_step_2_count = $check_signature_step_2->count();
 
+        $check_signature_step_5 = Signature::where([
+            ['cmf_id', $cmf->id],
+            ['step', 5],
+        ])->first();
+
+        $check_signature_step_6 = Signature::where([
+            ['cmf_id', $cmf->id],
+            ['step', 6],
+        ])->first();
+
+        $check_signature_step_7 = Signature::where([
+            ['cmf_id', $cmf->id],
+            ['user_id', auth()->user()->id],
+            ['step', 7],
+        ])->first();
+
+        $check_signature_step_7_get = $check_signature_step_7 = Signature::where([
+            ['cmf_id', $cmf->id],
+            ['step', 7],
+        ])->get();
+
         $signature_reviews = $check_signature_step_2->each(function ($val, $key){
             Review::whereIn('signature_id', $val)->get();
         });
+
+        $signature_evaluations = $check_signature_step_7_get->each(function ($val, $key){
+            Evaluation::whereIn('signature_id', $val)->get();
+        });
+
+        $check_signature_step_8 = Signature::where([
+            ['cmf_id', $cmf->id],
+            ['user_id', auth()->user()->id],
+            ['step', 8],
+        ])->first();
+
+        $check_signature_step_9 = Signature::where([
+            ['cmf_id', $cmf->id],
+            ['user_id', auth()->user()->id],
+            ['step', 9],
+        ])->first();
+
+        $has_activity = Activity::where('cmf_id', $cmf->id)->first();
 
         return view('back.cmf.review', compact(
             'cmf',
             'check_signature_step_1',
             'depthead_area_terkait',
             'check_signature_step_2_count',
-            'signature_reviews'
+            'signature_reviews',
+            'has_activity',
+            'check_signature',
+            'check_signature_step_5',
+            'check_signature_step_6',
+            'check_signature_step_7',
+            'signature_evaluations',
+            'check_signature_step_8',
+            'check_signature_step_9'
         ));
+    }
+
+    public function activity($slug, Request $request)
+    {
+        $cmf = Cmf::where('slug', $slug)->firstOrFail();
+        $user = User::find(auth()->user()->id)->first();
+        if($request['btn_review'] == 'review'){
+            $validated = $request->validate([
+                'tanggal_instalasi' => 'required|date',
+                'tanggal_trial' => 'required|date',
+                'tanggal_implementasi' => 'required|date'
+            ]);
+
+            Activity::create([
+                'cmf_id' => $cmf->id,
+                'tanggal_instalasi' => $validated['tanggal_instalasi'],
+                'tanggal_trial' => $validated['tanggal_trial'],
+                'tanggal_implementasi' => $validated['tanggal_implementasi']
+            ]);
+
+            return redirect()
+                ->route('cmf.index')
+                ->with('message','Request Perubahan CMF Berhasil dikirim');
+        }elseif($request['btn_review'] == 'setuju'){
+            if(auth()->user()->hasRole('depthead pic')){
+                DB::transaction(function () use($cmf, $user, $request){
+                    if($request->hasFile('signature')){
+                        $slug = auth()->user()->name;
+                        $extFileSignature = $request->signature->getClientOriginalExtension();
+                        $nameFileSignature = $slug.'-'.time()."-signature.".$extFileSignature;
+                        $request->signature->storeAs('public/uploads/signature/',$nameFileSignature);
+                        $user->update([
+                            'signature' => $nameFileSignature,
+                        ]);
+                    }
+
+                    Signature::firstOrCreate([
+                        'cmf_id' => $cmf->id,
+                        'user_id' => auth()->user()->id,
+                        'is_signature' => 1,
+                        'step' => 6,
+                        'keterangan' => 'Pengajuan Request Perubahan Disetujui Depthead PIC',
+                        'catatan' => $request['catatan']
+                    ]);
+
+                    $cmf->update([
+                        'status_pengajuan' => 'Pengajuan Request Perubahan Disetujui Depthead PIC',
+                        'step' => 8,
+                        'updated_by' => $user->name
+                    ]);
+                });
+                return back()
+                    ->with('message','Request Perubahan CMF Berhasil disetujui');
+            }else{
+                abort(403);
+            }
+        }elseif($request['btn_review'] == 'evaluasi_verifikasi'){
+            if(auth()->user()->hasRole('depthead')){
+                DB::transaction(function () use($cmf, $user, $request){
+                    if($request->hasFile('signature')){
+                        $slug = auth()->user()->name;
+                        $extFileSignature = $request->signature->getClientOriginalExtension();
+                        $nameFileSignature = $slug.'-'.time()."-signature.".$extFileSignature;
+                        $request->signature->storeAs('public/uploads/signature/',$nameFileSignature);
+                        $user->update([
+                            'signature' => $nameFileSignature,
+                        ]);
+                    }
+
+                    $signature = Signature::firstOrCreate([
+                        'cmf_id' => $cmf->id,
+                        'user_id' => auth()->user()->id,
+                        'is_signature' => 1,
+                        'step' => 7,
+                        'keterangan' => 'Evaluasi dan Verifikasi Disetujui Depthead',
+                        'catatan' => $request['catatan']
+                    ]);
+
+                    Evaluation::create([
+                        'signature_id' => $signature->id,
+                        'department_id' => auth()->user()->department_id,
+                        'evaluasi' => $request['evaluasi']
+                    ]);
+
+                    $cmf->update([
+                        'status_pengajuan' => 'Evaluasi dan Verifikasi Disetujui Depthead',
+                        'step' => 8,
+                        'updated_by' => $user->name
+                    ]);
+                });
+                return back()
+                    ->with('message','Evaluasi CMF berhasil diverifikasi');
+            }else{
+                abort(403);
+            }
+        }elseif($request['btn_review'] == 'verifikasi'){
+            if(auth()->user()->hasRole('mr & food safety team')){
+                DB::transaction(function () use($cmf, $user, $request){
+                    Signature::firstOrCreate([
+                        'cmf_id' => $cmf->id,
+                        'user_id' => auth()->user()->id,
+                        'is_signature' => 1,
+                        'step' => 8,
+                        'keterangan' => 'Verifikasi Disetujui MR & Food Safety Team',
+                        'catatan' => $request['catatan']
+                    ]);
+
+                    $cmf->update([
+                        'status_pengajuan' => 'Verifikasi Disetujui MR & Food Safety Team',
+                        'step' => 9,
+                        'updated_by' => $user->name
+                    ]);
+                });
+                return back()
+                    ->with('message','CMF berhasil diverifikasi');
+            }if(auth()->user()->hasRole('document control')){
+                DB::transaction(function () use($cmf, $user, $request){
+                    Signature::firstOrCreate([
+                        'cmf_id' => $cmf->id,
+                        'user_id' => auth()->user()->id,
+                        'is_signature' => 1,
+                        'step' => 9,
+                        'keterangan' => 'Verifikasi Disetujui Document Control',
+                        'catatan' => $request['catatan']
+                    ]);
+
+                    $cmf->update([
+                        'status_pengajuan' => 'Verifikasi Disetujui Document Control',
+                        'step' => 10,
+                        'updated_by' => $user->name
+                    ]);
+                });
+                return back()
+                    ->with('print','CMF berhasil diverifikasi');
+            }else{
+                abort(403);
+            }
+        }
+
     }
 
     public function detail($slug)

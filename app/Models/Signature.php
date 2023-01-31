@@ -24,4 +24,9 @@ class Signature extends Model
     {
         return $this->hasOne('App\Models\Review');
     }
+
+    public function evaluation()
+    {
+        return $this->hasOne('App\Models\Evaluation');
+    }
 }

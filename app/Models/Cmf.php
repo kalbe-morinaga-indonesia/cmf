@@ -57,7 +57,17 @@ class Cmf extends Model
         return $this->belongsTo('App\Models\User');
     }
 
+    public function activity()
+    {
+        return $this->hasOne('App\Models\Activity');
+    }
+
     public function subdepartments(){
         return $this->belongsToMany('App\Models\Subdepartment')->withTimestamps();
+    }
+
+    public function signatures()
+    {
+        return $this->hasMany('App\Models\Signature');
     }
 }

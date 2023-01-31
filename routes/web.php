@@ -154,16 +154,22 @@ Route::prefix('back')->middleware('auth')->group(function(){
             ->name('cmf.store');
         Route::get('/{slug}/detail',[\App\Http\Controllers\CmfController::class,'detail'])
             ->name('cmf.detail');
-        Route::get('/{slug}/review',[\App\Http\Controllers\CmfController::class,'review'])
-            ->name('cmf.review');
         Route::get('/{slug}/status',[\App\Http\Controllers\CmfController::class,'status'])
             ->name('cmf.status');
         Route::post('/{slug}/signature',[\App\Http\Controllers\CmfController::class,'signature'])
             ->name('cmf.signature');
         Route::post('/{slug}/revised',[\App\Http\Controllers\CmfController::class,'revised'])
             ->name('cmf.revised');
+        Route::get('/{slug}/review',[\App\Http\Controllers\CmfController::class,'review'])
+            ->name('cmf.review');
+        Route::post('/{slug}/review',[\App\Http\Controllers\CmfController::class,'activity'])
+            ->name('cmf.activity');
     });
 
+});
+
+Route::get('tes/', function (){
+    return view('back.cmf.print.print');
 });
 
 Auth::routes();

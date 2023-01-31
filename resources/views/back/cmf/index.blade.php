@@ -61,8 +61,27 @@
                             </td>
                             <td>
                                 <a href="{{route('cmf.detail',['slug' => $cmf->slug])}}" class="btn btn-info mb-2">Detail</a>
-                                @if($cmf->step == 7)
-                                    <a href="{{route('cmf.review',['slug' => $cmf->slug])}}" target="_blank" class="btn btn-dark">Review</a>
+                                @if($cmf->step >= 7 && $cmf->step <= 11)
+                                    @hasrole('pic|depthead pic|depthead|mr & food safety team|document control')
+                                    <a href="{{route('cmf.review',['slug' => $cmf->slug])}}" target="_blank" class="btn btn-dark mb-2">
+                                        @role('pic|depthead pic')
+                                        Review
+                                        @endrole
+                                        @role('depthead')
+                                        Evaluasi & Verifikasi
+                                        @endrole
+                                        @role('mr & food safety team|document control')
+                                        Verifikasi
+                                        @endrole
+                                    </a>
+                                    @role('document control')
+                                    @foreach($cmf->signatures as $signature)
+                                        @if($signature->step == 9)
+                                            <a href="#" class="btn btn-success">Print</a>
+                                        @endif
+                                    @endforeach
+                                    @endrole
+                                    @endhasrole
                                 @endif
                             </td>
                         </tr>
