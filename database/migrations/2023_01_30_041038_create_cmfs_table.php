@@ -23,6 +23,7 @@ return new class extends Migration {
             $table->string('status_pengajuan')->default('dikirim');
             $table->foreignId('department_id')->constrained()->cascadeOnDelete();
             $table->foreignId('subdepartment_id')->nullable()->constrained()->cascadeOnDelete();
+            $table->foreignId('user_id')->constrained()->cascadeOnDelete();
             $table->unsignedInteger('step')->default(1);
             $table->string('inserted_by');
             $table->string('updated_by');

@@ -154,6 +154,8 @@ Route::prefix('back')->middleware('auth')->group(function(){
             ->name('cmf.store');
         Route::get('/{slug}/detail',[\App\Http\Controllers\CmfController::class,'detail'])
             ->name('cmf.detail');
+        Route::get('/{slug}/status',[\App\Http\Controllers\CmfController::class,'status'])
+            ->name('cmf.status');
         Route::post('/{slug}/signature',[\App\Http\Controllers\CmfController::class,'signature'])
             ->name('cmf.signature');
         Route::post('/{slug}/revised',[\App\Http\Controllers\CmfController::class,'revised'])

@@ -13,7 +13,7 @@ class Cmf extends Model
     {
         return [
             'slug' => [
-                'source' => 'title'
+                'source' => 'no_cmf'
             ]
         ];
     }
@@ -32,6 +32,7 @@ class Cmf extends Model
         'status_pengajuan',
         'department_id',
         'subdepartment_id',
+        'user_id',
         'step',
         'inserted_by',
         'updated_by'
@@ -49,6 +50,11 @@ class Cmf extends Model
     public function department()
     {
         return $this->belongsTo('App\Models\Department');
+    }
+
+    public function user()
+    {
+        return $this->belongsTo('App\Models\User');
     }
 
     public function subdepartments(){

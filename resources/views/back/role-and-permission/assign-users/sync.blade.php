@@ -34,8 +34,8 @@
                     <div class="form-group">
                         @foreach($roles as $role)
                             <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="checkbox" name="roles[]" id="roles" value="{{$role->id}}" {{$role->permissions()->find($role->id) ? 'checked' : ''}}>
-                                <label class="form-check-label" for="roles">{{$role->name}}</label>
+                                <input class="form-check-input" type="checkbox" name="roles[]" id="{{$role->id}}" value="{{$role->id}}" {{$user->roles()->find($role->id) ? 'checked' : ''}}>
+                                <label class="form-check-label" for="{{$role->id}}">{{$role->name}}</label>
                             </div>
                         @endforeach
                     </div>

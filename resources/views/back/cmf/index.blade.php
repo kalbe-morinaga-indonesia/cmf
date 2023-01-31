@@ -56,7 +56,9 @@
                             <td>{{$cmf->department->txtNamaDept}}</td>
                             <td>{{$cmf->judul_perubahan}}</td>
                             <td>{{date('d M Y', strtotime($cmf->target_implementasi))}}</td>
-                            <td>{{$cmf->status_pengajuan}}</td>
+                            <td>
+                                <a href="{{route('cmf.status',['slug' => $cmf->slug])}}"><i class="bx bx-stats me-2"></i>Cek Status</a>
+                            </td>
                             <td>
                                 <a href="{{route('cmf.detail',['slug' => $cmf->slug])}}" class="btn btn-info">Detail</a>
                             </td>

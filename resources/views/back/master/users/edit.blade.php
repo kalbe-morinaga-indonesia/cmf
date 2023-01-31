@@ -59,6 +59,7 @@
                                 <div class="form-group">
                                     <label for="subdepartment" class="form-label">Sub-Department</label>
                                     <select name="subdepartment" id="subdepartment" class="form-select @error('subdepartment') is-invalid @enderror">
+                                        <option value=""></option>
                                         @foreach($subdepartments as $subdepartment)
                                             <option value="{{$subdepartment->id}}" {{$user->subdepartment_id == $subdepartment->id ? 'selected' : ''}}>{{$subdepartment->txtNamaSubDept}}</option>
                                         @endforeach
