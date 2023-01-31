@@ -140,6 +140,17 @@
             </a>
         </li>
         @endrole
+        @role('mr & food safety team')
+        <li class="menu-header small text-uppercase">
+            <span class="menu-header-text">CMF</span>
+        </li>
+        <li class="menu-item">
+            <a href="{{route('cmf.index')}}" class="menu-link">
+                <i class="menu-icon tf-icons bx bx-task"></i>
+                <div data-i18n="Account">Request Review CMF</div>
+            </a>
+        </li>
+        @endrole
         <li class="menu-item">
             <a class="menu-link" href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                 <i class="menu-icon tf-icons bx bx-log-out"></i>

@@ -191,3 +191,101 @@
     </div>
 </div>
 @endrole
+
+@role('mnf')
+<div class="modal fade" id="requestModalMnf" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Request Review CMF</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Apakah anda yakin untuk menyetujui <strong>Request Review CMF ini?</strong> Harap periksa kembali Request perubahan CMF yang diajukan, apabila anda sudah menyetujui maka tidak dapat dirubah kembali</p>
+                <form action="{{route('cmf.signature',['slug' => $cmf->slug])}}" method="post" enctype="multipart/form-data">
+                    @csrf
+                    <div class="form-group mb-4">
+                        <label for="no_cmf" class="form-label">NO CMF</label>
+                        <input type="text" name="no_cmf" id="no_cmf" class="form-control bg-dark text-white" value="{{$cmf->no_cmf}}" readonly>
+                    </div>
+                    <div class="my-4 text-end">
+                        <button type="submit" class="btn btn-primary"><i class="bx bx-check-circle me-2"></i>Iya, saya setuju</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="dontRequestModalMnf" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Request Review CMF</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Apakah anda yakin untuk tidak menyetujui <strong>Request Review CMF ini?</strong> Harap periksa kembali Request Review CMF yang diajukan, apabila anda tidak menyetujui maka tidak dapat dirubah kembali</p>
+                <form action="{{route('cmf.revised',['slug' => $cmf->slug])}}" method="post">
+                    @csrf
+                    <div class="form-group mb-4">
+                        <label for="no_cmf" class="form-label">NO CMF</label>
+                        <input type="text" name="no_cmf" id="no_cmf" class="form-control bg-dark text-white" value="{{$cmf->no_cmf}}" readonly>
+                    </div>
+                    <div class="my-4 text-end">
+                        <button type="submit" class="btn btn-danger"><i class="bx bx-mail-send me-2"></i>Tidak Setuju </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+@endrole
+
+@role('mr & food safety team')
+<div class="modal fade" id="requestModalMr" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Request Review CMF</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Apakah anda yakin untuk menyetujui <strong>Request Review CMF ini?</strong> Harap periksa kembali Request perubahan CMF yang diajukan, apabila anda sudah menyetujui maka tidak dapat dirubah kembali</p>
+                <form action="{{route('cmf.signature',['slug' => $cmf->slug])}}" method="post" enctype="multipart/form-data">
+                    @csrf
+                    <div class="form-group mb-4">
+                        <label for="no_cmf" class="form-label">NO CMF</label>
+                        <input type="text" name="no_cmf" id="no_cmf" class="form-control bg-dark text-white" value="{{$cmf->no_cmf}}" readonly>
+                    </div>
+                    <div class="my-4 text-end">
+                        <button type="submit" class="btn btn-primary"><i class="bx bx-check-circle me-2"></i>Iya, saya setuju</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="dontRequestModalMr" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Request Review CMF</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Apakah anda yakin untuk tidak menyetujui <strong>Request Review CMF ini?</strong> Harap periksa kembali Request Review CMF yang diajukan, apabila anda tidak menyetujui maka tidak dapat dirubah kembali</p>
+                <form action="{{route('cmf.revised',['slug' => $cmf->slug])}}" method="post">
+                    @csrf
+                    <div class="form-group mb-4">
+                        <label for="no_cmf" class="form-label">NO CMF</label>
+                        <input type="text" name="no_cmf" id="no_cmf" class="form-control bg-dark text-white" value="{{$cmf->no_cmf}}" readonly>
+                    </div>
+                    <div class="my-4 text-end">
+                        <button type="submit" class="btn btn-danger"><i class="bx bx-mail-send me-2"></i>Tidak Setuju </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+@endrole

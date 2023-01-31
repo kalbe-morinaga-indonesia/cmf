@@ -88,6 +88,36 @@ class CmfController extends Controller
             ->with('message','Request CMF Berhasil dibuat');
     }
 
+    public function review($slug)
+    {
+        $cmf = Cmf::where('slug', $slug)->firstOrFail();
+
+        $depthead_area_terkait = CMF::withCount('departments')->where('slug', $slug)->first();
+
+        $check_signature_step_1 = Signature::where([
+            ['cmf_id', $cmf->id],
+            ['step', 1],
+        ])->first();
+
+        $check_signature_step_2 = Signature::where([
+            ['cmf_id', $cmf->id],
+            ['step', 2],
+        ])->get();
+        $check_signature_step_2_count = $check_signature_step_2->count();
+
+        $signature_reviews = $check_signature_step_2->each(function ($val, $key){
+            Review::whereIn('signature_id', $val)->get();
+        });
+
+        return view('back.cmf.review', compact(
+            'cmf',
+            'check_signature_step_1',
+            'depthead_area_terkait',
+            'check_signature_step_2_count',
+            'signature_reviews'
+        ));
+    }
+
     public function detail($slug)
     {
         $cmf = Cmf::where('slug', $slug)->firstOrFail();
@@ -114,6 +144,11 @@ class CmfController extends Controller
             ['step', 3],
         ])->first();
 
+        $check_signature_step_4 = Signature::where([
+            ['cmf_id', $cmf->id],
+            ['step', 4],
+        ])->first();
+
         $signature_reviews = $check_signature_step_2->each(function ($val, $key){
             Review::whereIn('signature_id', $val)->get();
         });
@@ -125,7 +160,8 @@ class CmfController extends Controller
             'depthead_area_terkait',
             'check_signature_step_2_count',
             'check_signature_step_3',
-            'signature_reviews'
+            'signature_reviews',
+            'check_signature_step_4'
         ));
     }
 
@@ -229,6 +265,40 @@ class CmfController extends Controller
                 $cmf->update([
                     'status_pengajuan' => "Menyetujui Request Review CMF Oleh SVP System",
                     'step' => 5,
+                    'updated_by' => $user->name
+                ]);
+            });
+            return back()
+                ->with('message','Request Review CMF Berhasil disetujui');
+        }elseif (auth()->user()->hasRole('mnf')){
+            DB::transaction(function () use($cmf, $user, $request){
+                Signature::firstOrCreate([
+                    'cmf_id' => $cmf->id,
+                    'user_id' => auth()->user()->id,
+                    'is_signature' => 1,
+                    'step' => 4,
+                    'keterangan' => "Menyetujui Request Review CMF Oleh MNF"
+                ]);
+                $cmf->update([
+                    'status_pengajuan' => "Menyetujui Request Review CMF Oleh MNF",
+                    'step' => 6,
+                    'updated_by' => $user->name
+                ]);
+            });
+            return back()
+                ->with('message','Request Review CMF Berhasil disetujui');
+        }elseif (auth()->user()->hasRole('mr & food safety team')){
+            DB::transaction(function () use($cmf, $user, $request){
+                Signature::firstOrCreate([
+                    'cmf_id' => $cmf->id,
+                    'user_id' => auth()->user()->id,
+                    'is_signature' => 1,
+                    'step' => 5,
+                    'keterangan' => "Menyetujui Request Review CMF Oleh MR & Food Safety Team"
+                ]);
+                $cmf->update([
+                    'status_pengajuan' => "Menyetujui Request Review CMF Oleh MR & Food Safety Team",
+                    'step' => 7,
                     'updated_by' => $user->name
                 ]);
             });

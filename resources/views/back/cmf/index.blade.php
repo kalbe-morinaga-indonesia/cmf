@@ -60,7 +60,10 @@
                                 <a href="{{route('cmf.status',['slug' => $cmf->slug])}}"><i class="bx bx-stats me-2"></i>Cek Status</a>
                             </td>
                             <td>
-                                <a href="{{route('cmf.detail',['slug' => $cmf->slug])}}" class="btn btn-info">Detail</a>
+                                <a href="{{route('cmf.detail',['slug' => $cmf->slug])}}" class="btn btn-info mb-2">Detail</a>
+                                @if($cmf->step == 7)
+                                    <a href="{{route('cmf.review',['slug' => $cmf->slug])}}" target="_blank" class="btn btn-dark">Review</a>
+                                @endif
                             </td>
                         </tr>
                     @endforeach
