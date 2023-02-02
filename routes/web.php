@@ -18,7 +18,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('auth.login');
 });
 
 Route::prefix('back')->middleware('auth')->group(function(){
@@ -174,5 +174,3 @@ Route::get('lacak/',[\App\Http\Controllers\CmfController::class,'lacak'])
     ->name('cmf.lacak');
 
 Auth::routes();
-
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
