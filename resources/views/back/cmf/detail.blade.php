@@ -87,6 +87,49 @@
                         </div>
                     @endif
                 @endif
+               @if($check_signature_step_5 != null)
+                   @if($check_signature_step_5->is_signature == 0)
+                       <div class="row">
+                           <div class="col-lg-12">
+                               <div class="alert alert-danger">Request CMF tidak disetujui Oleh MR & Food Safety Team</div>
+                           </div>
+                       </div>
+                   @endif
+               @endif
+               @if($check_signature_step_6 != null)
+                   @if($check_signature_step_4->is_signature == 0)
+                       <div class="row">
+                           <div class="col-lg-12">
+                               <div class="alert alert-danger">Request CMF tidak disetujui Oleh Depthead PIC</div>
+                           </div>
+                       </div>
+                   @endif
+               @endif
+                   @if($check_signature_step_7_signature_0_count > 0)
+                       <div class="row">
+                           <div class="col-lg-12">
+                               <div class="alert alert-danger">Request CMF tidak disetujui Oleh Salah Satu Depthead Area Terkait</div>
+                           </div>
+                       </div>
+                   @endif
+               @if($check_signature_step_8 != null)
+                   @if($check_signature_step_8->is_signature == 0)
+                       <div class="row">
+                           <div class="col-lg-12">
+                               <div class="alert alert-danger">Request CMF tidak disetujui Oleh MR & Food Safety Team</div>
+                           </div>
+                       </div>
+                   @endif
+               @endif
+               @if($check_signature_step_9 != null)
+                   @if($check_signature_step_9->is_signature == 0)
+                       <div class="row">
+                           <div class="col-lg-12">
+                               <div class="alert alert-danger">Request CMF tidak disetujui Oleh Document Control</div>
+                           </div>
+                       </div>
+                   @endif
+               @endif
             <div class="card mb-4">
                 <div class="card-body">
                     <div class="row">

@@ -15,70 +15,105 @@
     <div class="row mb-4">
         <div class="col-lg-8">
             <div class="card mb-4">
-                <h5 class="card-header">Status CMF</h5>
+                <h5 class="card-header bg-dark text-white">Status CMF</h5>
+            </div>
+            <div class="card mb-4">
+                <h5 class="card-header">Review</h5>
                 <div class="card-body">
-                    @foreach($check_signature_pic as $signature)
-                            <div class="form-group mb-4">
-                                <label class="form-label">Depthead PIC</label>
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" {{$signature->is_signature == 1 ? 'checked' : ''}} readonly>
-                                    <label class="form-check-label">
-                                        Disetujui Depthead PIC
-                                    </label>
-                                </div>
-                            </div>
-                    @endforeach
-
+                    <div class="form-group mb-4">
+                        <label class="form-label">Depthead PIC</label>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" {{$check_signature_step_1->is_signature == 1 ? 'checked' : ''}} disabled>
+                            <label class="form-check-label">
+                                Depthead PIC
+                            </label>
+                        </div>
+                    </div>
                     <div class="form-group mb-4">
                         <label class="form-label">Depthead Area Terkait</label>
                         <br>
                         @foreach($cmf->departments as $department)
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" @foreach ($check_signature_depthead as $signature) {{$signature->user->department->id
-                                        == $department->id && $signature->is_signature == 1 ? 'checked' : ''}} @endforeach>
-                                        <label class="form-check-label">
-                                            Disetujui Depthead {{$department->txtNamaDept}}
-                                        </label>
-                                    </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" @foreach ($check_signature_depthead as $signature) {{$signature->user->department->id
+                                        == $department->id && $signature->is_signature == 1 ? 'checked' : ''}} @endforeach disabled>
+                                <label class="form-check-label">
+                                    Depthead {{$department->txtNamaDept}}
+                                </label>
+                            </div>
                         @endforeach
                     </div>
                     <div class="form-group mb-4">
                         <label class="form-label">SVP System</label>
                         <div class="form-check">
-                            <input class="form-check-input" type="checkbox">
+                            <input class="form-check-input" type="checkbox" {{$check_signature_step_3->is_signature == 1 ? 'checked' : ''}} disabled>
                             <label class="form-check-label">
-                                Disetujui SVP System
+                                SVP System
                             </label>
                         </div>
                     </div>
                     <div class="form-group mb-4">
                         <label class="form-label">MNF</label>
                         <div class="form-check">
-                            <input class="form-check-input" type="checkbox">
+                            <input class="form-check-input" type="checkbox" {{$check_signature_step_4->is_signature == 1 ? 'checked' : ''}} disabled>
                             <label class="form-check-label">
-                                Disetujui MNF
+                                MNF
                             </label>
                         </div>
                     </div>
                     <div class="form-group mb-4">
                         <label class="form-label">MR & Food Safety Team</label>
                         <div class="form-check">
-                            <input class="form-check-input" type="checkbox">
+                            <input class="form-check-input" type="checkbox" {{$check_signature_step_5->is_signature == 1 ? 'checked' : ''}} disabled>
                             <label class="form-check-label">
-                                Disetujui MR & Food Safety Team
+                                MR & Food Safety Team
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card mb-4">
+                <h5 class="card-header">Evaluasi & Verifikasi</h5>
+                <div class="card-body">
+                    <div class="form-group mb-4">
+                        <label class="form-label">Depthead PIC</label>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" {{$check_signature_step_6->is_signature == 1 ? 'checked' : ''}} disabled>
+                            <label class="form-check-label">
+                                Depthead PIC
+                            </label>
+                        </div>
+                    </div>
+                    <div class="form-group mb-4">
+                        <label class="form-label">Depthead Area Terkait</label>
+                        <br>
+                        @foreach($cmf->departments as $department)
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" @foreach ($check_signature_step_7 as $signature) {{$signature->user->department->id
+                                        == $department->id && $signature->is_signature == 1 ? 'checked' : ''}} @endforeach disabled>
+                                <label class="form-check-label">
+                                    Depthead {{$department->txtNamaDept}}
+                                </label>
+                            </div>
+                        @endforeach
+                    </div>
+                    <div class="form-group mb-4">
+                        <label class="form-label">MR & Food Safety Team</label>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" {{$check_signature_step_8->is_signature == 1 ? 'checked' : ''}} disabled>
+                            <label class="form-check-label">
+                                MR & Food Safety Team
                             </label>
                         </div>
                     </div>
                     <div class="form-group mb-4">
                         <label class="form-label">Document Control</label>
                         <div class="form-check">
-                            <input class="form-check-input" type="checkbox">
+                            <input class="form-check-input" type="checkbox" {{$check_signature_step_9->is_signature == 1 ? 'checked' : ''}} disabled>
                             <label class="form-check-label">
-                                Disetujui Document Control
+                                Document Control
                             </label>
                         </div>
                     </div>
-
                 </div>
             </div>
         </div>

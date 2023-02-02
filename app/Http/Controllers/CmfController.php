@@ -459,9 +459,32 @@ class CmfController extends Controller
             ['step', 5],
         ])->first();
 
+        $check_signature_step_6 = Signature::where([
+            ['cmf_id', $cmf->id],
+            ['step', 6],
+        ])->first();
+
         $signature_reviews = $check_signature_step_2->each(function ($val, $key){
             Review::whereIn('signature_id', $val)->get();
         });
+
+        $check_signature_step_7_signature_0 = Signature::where([
+            ['cmf_id', $cmf->id],
+            ['is_signature',0],
+            ['step',7]
+        ])->get();
+
+        $check_signature_step_7_signature_0_count = $check_signature_step_7_signature_0->count();
+
+        $check_signature_step_8 = Signature::where([
+            ['cmf_id', $cmf->id],
+            ['step', 8],
+        ])->first();
+
+        $check_signature_step_9 = Signature::where([
+            ['cmf_id', $cmf->id],
+            ['step', 9],
+        ])->first();
 
         return view('back.cmf.detail', compact(
             'cmf',
@@ -474,7 +497,11 @@ class CmfController extends Controller
             'signature_reviews',
             'check_signature_step_4',
             'check_signature_step_2_has_signature_count',
-            'check_signature_step_5'
+            'check_signature_step_5',
+            'check_signature_step_6',
+            'check_signature_step_7_signature_0_count',
+            'check_signature_step_8',
+            'check_signature_step_9'
         ));
     }
 
@@ -482,19 +509,54 @@ class CmfController extends Controller
     {
         $cmf = Cmf::where('slug', $slug)->firstOrFail();
         $histories = Signature::where('cmf_id', $cmf->id)->get();
-        $check_signature_pic = Signature::where([
+        $check_signature_step_1 = Signature::where([
             ['cmf_id', $cmf->id],
             ['step',1]
-        ])->get();
+        ])->first();
         $check_signature_depthead = Signature::where([
             ['cmf_id', $cmf->id],
             ['step',2]
         ])->get();
+        $check_signature_step_3 = Signature::where([
+            ['cmf_id', $cmf->id],
+            ['step',3]
+        ])->first();
+        $check_signature_step_4 = Signature::where([
+            ['cmf_id', $cmf->id],
+            ['step',4]
+        ])->first();
+        $check_signature_step_5 = Signature::where([
+            ['cmf_id', $cmf->id],
+            ['step',5]
+        ])->first();
+        $check_signature_step_6 = Signature::where([
+            ['cmf_id', $cmf->id],
+            ['step',6]
+        ])->first();
+        $check_signature_step_7 = Signature::where([
+            ['cmf_id', $cmf->id],
+            ['step',7]
+        ])->get();
+        $check_signature_step_8 = Signature::where([
+            ['cmf_id', $cmf->id],
+            ['step',8]
+        ])->first();
+        $check_signature_step_9 = Signature::where([
+            ['cmf_id', $cmf->id],
+            ['step',9]
+        ])->first();
 
         return view('back.cmf.status', compact(
             'cmf',
-            'check_signature_pic',
+            'check_signature_step_1',
             'check_signature_depthead',
+            'check_signature_step_3',
+            'check_signature_step_4',
+            'check_signature_step_5',
+            'check_signature_step_6',
+            'check_signature_step_7',
+            'check_signature_step_8',
+            'check_signature_step_9',
             'histories'
         ));
     }
@@ -727,5 +789,68 @@ class CmfController extends Controller
             abort(403);
         }
 
+    }
+
+    public function print($slug)
+    {
+        $cmf = Cmf::where('slug', $slug)->firstOrFail();
+        $check_signature_step_1 = Signature::where([
+            ['cmf_id', $cmf->id],
+            ['step',1]
+        ])->first();
+        $check_signature_step_2 = Signature::where([
+            ['cmf_id', $cmf->id],
+            ['step',2]
+        ])->get();
+        $check_signature_step_3 = Signature::where([
+            ['cmf_id', $cmf->id],
+            ['step',3]
+        ])->first();
+        $check_signature_step_4 = Signature::where([
+            ['cmf_id', $cmf->id],
+            ['step',4]
+        ])->first();
+        $check_signature_step_5 = Signature::where([
+            ['cmf_id', $cmf->id],
+            ['step',5]
+        ])->first();
+        $check_signature_step_6 = Signature::where([
+            ['cmf_id', $cmf->id],
+            ['step',6]
+        ])->first();
+        $check_signature_step_7 = Signature::where([
+            ['cmf_id', $cmf->id],
+            ['step',7]
+        ])->get();
+        $check_signature_step_8 = Signature::where([
+            ['cmf_id', $cmf->id],
+            ['step',8]
+        ])->first();
+        $check_signature_step_9 = Signature::where([
+            ['cmf_id', $cmf->id],
+            ['step',9]
+        ])->first();
+
+        $signature_reviews = $check_signature_step_2->each(function ($val, $key){
+            Review::whereIn('signature_id', $val)->get();
+        });
+
+        $signature_evaluations = $check_signature_step_7->each(function ($val, $key){
+            Review::whereIn('signature_id', $val)->get();
+        });
+
+        return view('back.cmf.print.print', compact(
+            'cmf',
+            'check_signature_step_1',
+            'check_signature_step_2',
+            'check_signature_step_3',
+            'check_signature_step_4',
+            'check_signature_step_5',
+            'check_signature_step_6',
+            'check_signature_step_8',
+            'check_signature_step_9',
+            'signature_reviews',
+            'signature_evaluations'
+        ));
     }
 }
