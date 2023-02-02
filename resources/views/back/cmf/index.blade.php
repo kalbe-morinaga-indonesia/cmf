@@ -131,8 +131,8 @@
                                     </a>
                                     @role('document control')
                                     @foreach($cmf->signatures as $signature)
-                                        @if($signature->step == 9)
-                                            <a href="#" class="btn btn-success">Print</a>
+                                        @if($signature->step == 9 && $signature->is_signature == 1)
+                                            <a href="{{route('cmf.print',['slug' => $cmf->slug])}}" class="btn btn-success" target="_blank">Print</a>
                                         @endif
                                     @endforeach
                                     @endrole

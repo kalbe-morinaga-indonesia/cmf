@@ -11,9 +11,12 @@ use App\Models\Risk;
 use App\Models\Signature;
 use App\Models\Subdepartment;
 use App\Models\User;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Elibyy\TCPDF\Facades\TCPDF;
+use Illuminate\Support\Facades\View;
 
 class CmfController extends Controller
 {
@@ -21,7 +24,7 @@ class CmfController extends Controller
     public function index()
     {
         $cmfs = Cmf::where('user_id', auth()->user()->id)->get();
-        $cmfs_all = Cmf::get();
+        $cmfs_all = CMF::get();
         return view('back.cmf.index', compact(
             'cmfs',
             'cmfs_all'
@@ -430,6 +433,12 @@ class CmfController extends Controller
             ['step', 1],
         ])->first();
 
+        $check_signature_step_2_check = Signature::where([
+            ['cmf_id', $cmf->id],
+            ['step', 2],
+            ['user_id', auth()->user()->id]
+        ])->first();
+
         $check_signature_step_2 = Signature::where([
             ['cmf_id', $cmf->id],
             ['step', 2],
@@ -492,6 +501,7 @@ class CmfController extends Controller
             'check_signature_step_1',
             'depthead_area_terkait',
             'check_signature_step_2',
+            'check_signature_step_2_check',
             'check_signature_step_2_count',
             'check_signature_step_3',
             'signature_reviews',
@@ -838,19 +848,31 @@ class CmfController extends Controller
         $signature_evaluations = $check_signature_step_7->each(function ($val, $key){
             Review::whereIn('signature_id', $val)->get();
         });
+        $pdf = Pdf::loadView('print',[
+            'cmf' => $cmf,
+            'check_signature_step_1' => $check_signature_step_1,
+            'check_signature_step_2' => $check_signature_step_2,
+            'check_signature_step_3' => $check_signature_step_3,
+            'check_signature_step_4' => $check_signature_step_4,
+            'check_signature_step_5' => $check_signature_step_5,
+            'check_signature_step_6' => $check_signature_step_6,
+            'check_signature_step_7' => $check_signature_step_7,
+            'check_signature_step_8' => $check_signature_step_8,
+            'check_signature_step_9' => $check_signature_step_9,
+            'signature_reviews' => $signature_reviews,
+            'signature_evaluations' => $signature_evaluations
+        ])->setPaper('A4');
+        return $pdf->stream();
+    }
 
-        return view('back.cmf.print.print', compact(
-            'cmf',
-            'check_signature_step_1',
-            'check_signature_step_2',
-            'check_signature_step_3',
-            'check_signature_step_4',
-            'check_signature_step_5',
-            'check_signature_step_6',
-            'check_signature_step_8',
-            'check_signature_step_9',
-            'signature_reviews',
-            'signature_evaluations'
+    public function lacak(Request $request)
+    {
+
+        $no_cmf = $request['no_cmf'];
+        $cmf = Cmf::where('no_cmf', $no_cmf)->first();
+
+        return view('back.cmf.lacak', compact(
+            'cmf'
         ));
     }
 }

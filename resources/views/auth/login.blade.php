@@ -48,6 +48,10 @@
                         </div>
                         <div class="mb-3">
                             <button class="btn btn-primary d-grid w-100" type="submit">Sign in</button>
+                            <hr>
+                        </div>
+                        <div class="text-center">
+                            <a href="{{route('cmf.lacak')}}" target="_blank">Lacak CMF</a>
                         </div>
                     </form>
                 </div>

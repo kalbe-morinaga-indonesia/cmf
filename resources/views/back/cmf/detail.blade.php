@@ -287,48 +287,72 @@
                 <h5 class="card-header">Keputusan Perubahan</h5>
                 <hr class="my-0">
                 <div class="card-body">
-                    @if($check_signature != null)
-                        @if($check_signature->is_signature == 1 && $check_signature->step == 2)
-                            <div class="text-center mb-4">
-                                <img src="{{asset('storage/uploads/signature/'. $check_signature->user->signature)}}" alt="" height="80">
-                            </div>
-                            <div class="alert alert-success">
-                                <i class="bx bx-check-circle me-1"></i> Request Review CMF sudah disetujui
-                            </div>
-                            <div class="text-end">
-                                <button type="button" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#reviewModal"><i class="bx bx-note me-2"></i>Cek Review</button>
-                            </div>
-                        @elseif($check_signature->is_signature == 0 && $check_signature->step == 2)
-                            <div class="alert alert-danger">
-                                <i class="bx bx-check-circle me-1"></i> Request Review CMF tidak disetujui
-                            </div>
-                            <div class="text-end">
-                                <button type="button" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#reviewModal"><i class="bx bx-note me-2"></i>Cek Review</button>
-                            </div>
-                        @endif
-                    @else
-                        @if($check_signature_step_1 != null)
-                            @if($check_signature_step_1->is_signature == 1)
-                                <div class="d-block d-grid gap-2">
-                                    <button type="button" class="btn btn-success mb-3" data-bs-toggle="modal" data-bs-target="#requestModalDepthead">Setuju</button>
-                                    <button type="button" class="btn btn-danger mb-3" data-bs-toggle="modal" data-bs-target="#dontRequestModalDepthead">Tidak Setuju</button>
-                                </div>
-                            @elseif($check_signature_step_1 -> is_siganature == 0)
-                                <div class="alert alert-danger">
-                                    Request perubahan CMF tidak disetejui oleh depthead PIC
-                                </div>
+                    @foreach($cmf->departments as $department)
+                        @if($department->id == auth()->user()->department_id)
+                           @if($check_signature_step_2_check != null)
+                                @if($check_signature_step_2_check->is_signature == 1)
+                                    <div class="text-center mb-4">
+                                        <img src="{{asset('storage/uploads/signature/'. $check_signature->user->signature)}}" alt="" height="80">
+                                    </div>
+                                    <div class="alert alert-success">
+                                        <i class="bx bx-check-circle me-1"></i> Request Review CMF sudah disetujui
+                                    </div>
+                                    <div class="text-end">
+                                        <button type="button" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#reviewModal"><i class="bx bx-note me-2"></i>Cek Review</button>
+                                    </div>
+                                @elseif($check_signature_step_2_check->is_signature == 0)
+                                    <div class="alert alert-danger">
+                                        <i class="bx bx-check-circle me-1"></i> Request Review CMF tidak disetujui
+                                    </div>
+                                    <div class="text-end">
+                                        <button type="button" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#reviewModal"><i class="bx bx-note me-2"></i>Cek Review</button>
+                                    </div>
+                                @else
+                                    @if($check_signature_step_1 != null)
+                                        @if($check_signature_step_1->is_signature == 1)
+                                            <div class="d-block d-grid gap-2">
+                                                <button type="button" class="btn btn-success mb-3" data-bs-toggle="modal" data-bs-target="#requestModalDepthead">Setuju</button>
+                                                <button type="button" class="btn btn-danger mb-3" data-bs-toggle="modal" data-bs-target="#dontRequestModalDepthead">Tidak Setuju</button>
+                                            </div>
+                                        @elseif($check_signature_step_1 -> is_siganature == 0)
+                                            <div class="alert alert-danger">
+                                                Request perubahan CMF tidak disetujui oleh depthead PIC
+                                            </div>
+                                        @else
+                                            <div class="alert alert-danger">
+                                                Request perubahan CMF belum disetejui oleh depthead PIC
+                                            </div>
+                                        @endif
+                                    @else
+                                        <div class="alert alert-danger">
+                                            Harap tunggu karena proses ini dilakukan secara berurutan
+                                        </div>
+                                    @endif
+                                @endif
                             @else
-                                <div class="alert alert-danger">
-                                    Request perubahan CMF belum disetejui oleh depthead PIC
-                                </div>
-                            @endif
-                        @else
-                            <div class="alert alert-danger">
-                                Harap tunggu karena proses ini dilakukan secara berurutan
-                            </div>
+                                @if($check_signature_step_1 != null)
+                                    @if($check_signature_step_1->is_signature == 1)
+                                        <div class="d-block d-grid gap-2">
+                                            <button type="button" class="btn btn-success mb-3" data-bs-toggle="modal" data-bs-target="#requestModalDepthead">Setuju</button>
+                                            <button type="button" class="btn btn-danger mb-3" data-bs-toggle="modal" data-bs-target="#dontRequestModalDepthead">Tidak Setuju</button>
+                                        </div>
+                                    @elseif($check_signature_step_1 -> is_siganature == 0)
+                                        <div class="alert alert-danger">
+                                            Request perubahan CMF tidak disetujui oleh depthead PIC
+                                        </div>
+                                    @else
+                                        <div class="alert alert-danger">
+                                            Request perubahan CMF belum disetejui oleh depthead PIC
+                                        </div>
+                                    @endif
+                                @else
+                                    <div class="alert alert-danger">
+                                        Harap tunggu karena proses ini dilakukan secara berurutan
+                                    </div>
+                                @endif
+                           @endif
                         @endif
-
-                    @endif
+                    @endforeach
                 </div>
             </div>
         </div>

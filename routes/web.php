@@ -164,13 +164,14 @@ Route::prefix('back')->middleware('auth')->group(function(){
             ->name('cmf.review');
         Route::post('/{slug}/review',[\App\Http\Controllers\CmfController::class,'activity'])
             ->name('cmf.activity');
+        Route::get('/{slug}/print',[\App\Http\Controllers\CmfController::class,'print'])
+            ->name('cmf.print');
     });
 
 });
 
-Route::get('tes/', function (){
-    return view('back.cmf.print.print');
-});
+Route::get('lacak/',[\App\Http\Controllers\CmfController::class,'lacak'])
+    ->name('cmf.lacak');
 
 Auth::routes();
 
