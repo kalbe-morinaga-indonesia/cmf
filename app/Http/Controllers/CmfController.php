@@ -20,9 +20,11 @@ class CmfController extends Controller
 
     public function index()
     {
-        $cmfs = Cmf::get();
+        $cmfs = Cmf::where('user_id', auth()->user()->id)->get();
+        $cmfs_all = Cmf::get();
         return view('back.cmf.index', compact(
-            'cmfs'
+            'cmfs',
+            'cmfs_all'
         ));
     }
 
@@ -133,6 +135,13 @@ class CmfController extends Controller
             ['step', 7],
         ])->get();
 
+        $check_signature_step_7_signature_0 = Signature::where([
+            ['cmf_id', $cmf->id],
+            ['is_signature',0],
+            ['step',7]
+        ])->get();
+
+        $check_signature_step_7_signature_0_count = $check_signature_step_7_signature_0->count();
 
         $signature_reviews = $check_signature_step_2->each(function ($val, $key){
             Review::whereIn('signature_id', $val)->get();
@@ -144,7 +153,6 @@ class CmfController extends Controller
 
         $check_signature_step_8 = Signature::where([
             ['cmf_id', $cmf->id],
-            ['user_id', auth()->user()->id],
             ['step', 8],
         ])->first();
 
@@ -170,7 +178,8 @@ class CmfController extends Controller
             'check_signature_step_7_get',
             'signature_evaluations',
             'check_signature_step_8',
-            'check_signature_step_9'
+            'check_signature_step_9',
+            'check_signature_step_7_signature_0_count'
         ));
     }
 
@@ -228,6 +237,29 @@ class CmfController extends Controller
             }else{
                 abort(403);
             }
+        }elseif($request['btn_review'] == 'tidak_setuju'){
+            if(auth()->user()->hasRole('depthead pic')){
+                DB::transaction(function () use($cmf, $user, $request){
+                    Signature::firstOrCreate([
+                        'cmf_id' => $cmf->id,
+                        'user_id' => auth()->user()->id,
+                        'is_signature' => 0,
+                        'step' => 6,
+                        'keterangan' => 'Pengajuan Request Perubahan Tidak Disetujui Depthead PIC',
+                        'catatan' => $request['catatan']
+                    ]);
+
+                    $cmf->update([
+                        'status_pengajuan' => 'Pengajuan Request Perubahan Tidak Disetujui Depthead PIC',
+                        'step' => 8,
+                        'updated_by' => $user->name
+                    ]);
+                });
+                return back()
+                    ->with('message-error','Request Perubahan CMF Tidak disetujui');
+            }else{
+                abort(403);
+            }
         }elseif($request['btn_review'] == 'evaluasi_verifikasi'){
             if(auth()->user()->hasRole('depthead')){
                 DB::transaction(function () use($cmf, $user, $request){
@@ -264,6 +296,35 @@ class CmfController extends Controller
                 });
                 return back()
                     ->with('message','Evaluasi CMF berhasil diverifikasi');
+            }else{
+                abort(403);
+            }
+        }elseif($request['btn_review'] == 'evaluasi_verifikasi_tidak_setuju'){
+            if(auth()->user()->hasRole('depthead')){
+                DB::transaction(function () use($cmf, $user, $request){
+                    $signature = Signature::firstOrCreate([
+                        'cmf_id' => $cmf->id,
+                        'user_id' => auth()->user()->id,
+                        'is_signature' => 0,
+                        'step' => 7,
+                        'keterangan' => 'Evaluasi dan Verifikasi TIdak Disetujui Depthead',
+                        'catatan' => $request['catatan']
+                    ]);
+
+                    Evaluation::create([
+                        'signature_id' => $signature->id,
+                        'department_id' => auth()->user()->department_id,
+                        'evaluasi' => $request['evaluasi']
+                    ]);
+
+                    $cmf->update([
+                        'status_pengajuan' => 'Evaluasi dan Verifikasi Tidak Disetujui Depthead',
+                        'step' => 8,
+                        'updated_by' => $user->name
+                    ]);
+                });
+                return back()
+                    ->with('message-error','Evaluasi CMF Tidak Disetujui');
             }else{
                 abort(403);
             }
@@ -309,8 +370,49 @@ class CmfController extends Controller
             }else{
                 abort(403);
             }
-        }
+        }elseif($request['btn_review'] == 'verifikasi_tidak_setuju'){
+            if(auth()->user()->hasRole('mr & food safety team')){
+                DB::transaction(function () use($cmf, $user, $request){
+                    Signature::firstOrCreate([
+                        'cmf_id' => $cmf->id,
+                        'user_id' => auth()->user()->id,
+                        'is_signature' => 0,
+                        'step' => 8,
+                        'keterangan' => 'Verifikasi Tidak Disetujui MR & Food Safety Team',
+                        'catatan' => $request['catatan']
+                    ]);
 
+                    $cmf->update([
+                        'status_pengajuan' => 'Verifikasi Tidak Disetujui MR & Food Safety Team',
+                        'step' => 9,
+                        'updated_by' => $user->name
+                    ]);
+                });
+                return back()
+                    ->with('message-error','CMF tidak diverifikasi');
+            }if(auth()->user()->hasRole('document control')){
+                DB::transaction(function () use($cmf, $user, $request){
+                    Signature::firstOrCreate([
+                        'cmf_id' => $cmf->id,
+                        'user_id' => auth()->user()->id,
+                        'is_signature' => 0,
+                        'step' => 9,
+                        'keterangan' => 'Verifikasi Tidak Disetujui Document Control',
+                        'catatan' => $request['catatan']
+                    ]);
+
+                    $cmf->update([
+                        'status_pengajuan' => 'Verifikasi Tidak Disetujui Document Control',
+                        'step' => 10,
+                        'updated_by' => $user->name
+                    ]);
+                });
+                return back()
+                    ->with('message-error','CMF tidak diverifikasi');
+            }else{
+                abort(403);
+            }
+        }
     }
 
     public function detail($slug)
@@ -334,6 +436,14 @@ class CmfController extends Controller
         ])->get();
         $check_signature_step_2_count = $check_signature_step_2->count();
 
+        $check_signature_step_2_has_signature = Signature::where([
+            ['cmf_id', $cmf->id],
+            ['step', 2],
+            ['is_signature', 0]
+        ])->get();
+        $check_signature_step_2_has_signature_count = $check_signature_step_2_has_signature->count();
+
+
         $check_signature_step_3 = Signature::where([
             ['cmf_id', $cmf->id],
             ['step', 3],
@@ -342,6 +452,11 @@ class CmfController extends Controller
         $check_signature_step_4 = Signature::where([
             ['cmf_id', $cmf->id],
             ['step', 4],
+        ])->first();
+
+        $check_signature_step_5 = Signature::where([
+            ['cmf_id', $cmf->id],
+            ['step', 5],
         ])->first();
 
         $signature_reviews = $check_signature_step_2->each(function ($val, $key){
@@ -353,10 +468,13 @@ class CmfController extends Controller
             'check_signature',
             'check_signature_step_1',
             'depthead_area_terkait',
+            'check_signature_step_2',
             'check_signature_step_2_count',
             'check_signature_step_3',
             'signature_reviews',
-            'check_signature_step_4'
+            'check_signature_step_4',
+            'check_signature_step_2_has_signature_count',
+            'check_signature_step_5'
         ));
     }
 
@@ -505,11 +623,11 @@ class CmfController extends Controller
         }
     }
 
-    public function revised($slug)
+    public function revised($slug, Request $request)
     {
         $cmf = Cmf::where('slug', $slug)->firstOrFail();
         if(auth()->user()->hasRole('depthead pic')){
-            DB::transaction(function () use($cmf){
+            DB::transaction(function () use($cmf, $request){
                 $cmf->update([
                     'status_pengajuan' => 'Pengajuan Request Perubahan Tidak Disetujui Depthead PIC',
                     'step' => 2,
@@ -520,29 +638,40 @@ class CmfController extends Controller
                     'user_id' => auth()->user()->id,
                     'is_signature' => 0,
                     'step' => 1,
-                    'keterangan' => "Request Perubahan CMF Tidak Disetujui Oleh Depthead PIC"
+                    'keterangan' => "Request Perubahan CMF Tidak Disetujui Oleh Depthead PIC",
+                    'catatan' => $request['catatan']
                 ]);
             });
             return back()
-                ->with('message','Request Perubahan CMF tidak disetujui');
-        }elseif(auth()->user()->hasRole('depthead')){
-            DB::transaction(function () use($cmf){
+                ->with('message-error','Request Perubahan CMF tidak disetujui');
+        }
+        elseif(auth()->user()->hasRole('depthead')){
+            DB::transaction(function () use($cmf, $request){
                 $cmf->update([
                     'status_pengajuan' => 'Pengajuan Request Review Tidak Disetujui Depthead Area Terkait',
                     'step' => 3,
                     'updated_by' => auth()->user()->name
                 ]);
-                Signature::updateOrCreate([
+
+                $signature = Signature::updateOrCreate([
                     'cmf_id' => $cmf->id,
                     'user_id' => auth()->user()->id,
                     'is_signature' => 0,
                     'step' => 2,
                     'keterangan' => "Request Review CMF Tidak Disetujui Oleh Depthead Area Terkait"
                 ]);
+
+                Review::create([
+                    'signature_id' => $signature->id,
+                    'department_id' => auth()->user()->department_id,
+                    'review' => $request['review']
+                ]);
+
             });
             return back()
-                ->with('message','Request Review CMF tidak disetujui');
-        }elseif(auth()->user()->hasRole('svp system')){
+                ->with('message-error','Request Review CMF tidak disetujui');
+        }
+        elseif(auth()->user()->hasRole('svp system')){
             DB::transaction(function () use($cmf){
                 $cmf->update([
                     'status_pengajuan' => 'Pengajuan Request Review Tidak Disetujui SVP System',
@@ -558,7 +687,41 @@ class CmfController extends Controller
                 ]);
             });
             return back()
-                ->with('message','Request Review CMF tidak disetujui');
+                ->with('message-error','Request Review CMF tidak disetujui');
+        } elseif(auth()->user()->hasRole('mnf')){
+            DB::transaction(function () use($cmf){
+                $cmf->update([
+                    'status_pengajuan' => 'Pengajuan Request Review Tidak Disetujui MNF',
+                    'step' => 5,
+                    'updated_by' => auth()->user()->name
+                ]);
+                Signature::updateOrCreate([
+                    'cmf_id' => $cmf->id,
+                    'user_id' => auth()->user()->id,
+                    'is_signature' => 0,
+                    'step' => 4,
+                    'keterangan' => "Request Review CMF Tidak Disetujui Oleh MNF"
+                ]);
+            });
+            return back()
+                ->with('message-error','Request Review CMF tidak disetujui');
+        }elseif(auth()->user()->hasRole('mr & food safety team')){
+            DB::transaction(function () use($cmf){
+                $cmf->update([
+                    'status_pengajuan' => 'Pengajuan Request Review Tidak Disetujui MR & Food Safety Team',
+                    'step' => 6,
+                    'updated_by' => auth()->user()->name
+                ]);
+                Signature::updateOrCreate([
+                    'cmf_id' => $cmf->id,
+                    'user_id' => auth()->user()->id,
+                    'is_signature' => 0,
+                    'step' => 5,
+                    'keterangan' => "Request Review CMF Tidak Disetujui Oleh MR & Food Safety Team"
+                ]);
+            });
+            return back()
+                ->with('message-error','Request Review CMF tidak disetujui');
         }
         else{
             abort(403);

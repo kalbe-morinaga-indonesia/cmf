@@ -11,6 +11,13 @@
             </div>
         </div>
     @endif
+    @if (session()->has('message-error'))
+        <div class="card mb-4">
+            <div class="card-body">
+                <div class="alert alert-danger">{{ session()->get('message-error') }}</div>
+            </div>
+        </div>
+    @endif
     @role('depthead pic')
     <div class="row mb-4">
         <div class="col-lg-12">
@@ -155,32 +162,43 @@
                             </div>
                         </div>
                         @foreach($signature_evaluations as $evaluation)
-                            <div class="card mb-4">
-                                <h5 class="card-header bg-dark text-white">Dept Head Area Terkait {{$evaluation->evaluation->department->txtNamaDept}}</h5>
-                                <div class="card-body">
-                                    <div class="row">
-                                        <div class="col-lg-3">
-                                            <p class="text-center text-dark card-header">Dibuat Oleh</p>
-                                            <div class="text-center">
-                                                <img src="{{asset('storage/uploads/signature/'. $cmf->user->signature)}}" alt="" height="80" class="mb-2">
-                                                <p class="text-dark">{{$cmf->user->name}}</p>
+                            @if($evaluation->is_signature == 1)
+                                <div class="card mb-4">
+                                    <h5 class="card-header bg-dark text-white">Dept Head Area Terkait {{$evaluation->evaluation->department->txtNamaDept}}</h5>
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col-lg-3">
+                                                <p class="text-center text-dark card-header">Dibuat Oleh</p>
+                                                <div class="text-center">
+                                                    <img src="{{asset('storage/uploads/signature/'. $cmf->user->signature)}}" alt="" height="80" class="mb-2">
+                                                    <p class="text-dark">{{$cmf->user->name}}</p>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-6">
+                                                <p class="card-header text-center text-dark">Evaluasi Depthead {{$evaluation->evaluation->department->txtNamaDept}}</p>
+                                                <p>{{$evaluation->evaluation->evaluasi ?? 'Tidak ada evaluasi'}}</p>
+                                            </div>
+                                            <div class="col-lg-3">
+                                                <p class="text-center text-dark card-header">Disetujui Oleh</p>
+                                                <div class="text-center">
+                                                    <img src="{{asset('storage/uploads/signature/'. $evaluation->user->signature)}}" alt="" height="80">
+                                                    <p class="text-dark">{{$evaluation->evaluation->signature->user->name}}</p>
+                                                </div>
                                             </div>
                                         </div>
-                                        <div class="col-lg-6">
+
+                                    </div>
+                                </div>
+                            @endif
+                            @if($evaluation->is_signature == 0)
+                                    <div class="card mb-4">
+                                        <h5 class="card-header bg-danger text-white">Dept Head Area Terkait {{$evaluation->evaluation->department->txtNamaDept}} - Tidak Menyetujui</h5>
+                                        <div class="card-body">
                                             <p class="card-header text-center text-dark">Evaluasi Depthead {{$evaluation->evaluation->department->txtNamaDept}}</p>
                                             <p>{{$evaluation->evaluation->evaluasi ?? 'Tidak ada evaluasi'}}</p>
                                         </div>
-                                        <div class="col-lg-3">
-                                            <p class="text-center text-dark card-header">Disetujui Oleh</p>
-                                            <div class="text-center">
-                                                <img src="{{asset('storage/uploads/signature/'. $evaluation->user->signature)}}" alt="" height="80">
-                                                <p class="text-dark">{{$evaluation->evaluation->signature->user->name}}</p>
-                                            </div>
-                                        </div>
                                     </div>
-
-                                </div>
-                            </div>
+                            @endif
                         @endforeach
                     </div>
                 </div>
@@ -204,7 +222,7 @@
                                                 </div>
                                             </div>
                                             <div class="col-lg-6">
-                                                <p class="card-header text-center text-dark">Catatan Depthead {{$review->review->department->txtNamaDept}}</p>
+                                                <p class="card-header text-center text-dark">Review Depthead {{$review->review->department->txtNamaDept}}</p>
                                                 <p>{{$review->review->review ?? 'Tidak ada review'}}</p>
                                             </div>
                                             <div class="col-lg-3">
@@ -261,16 +279,22 @@
                 <hr class="my-0">
                 <div class="card-body">
                     @if($cmf->activity)
-                        @if($check_signature_step_6)
-                            <div class="text-center mb-4">
-                                <img src="{{asset('storage/uploads/signature/'. $check_signature->user->signature)}}" alt="" height="80">
-                            </div>
-                            <div class="alert alert-success">
-                                <i class="bx bx-check-circle me-1"></i> Pengajuan Request Perubahan CMF sudah ditanda tangan dan sudah disetujui
-                            </div>
-                            <div class="text-end">
-                                <button type="button" class="btn btn-dark btn-sm" data-bs-toggle="modal" data-bs-target="#noteModalPerubahan"><i class="bx bx-note me-2"></i>Cek Catatan</button>
-                            </div>
+                        @if($check_signature_step_6 != null)
+                            @if($check_signature_step_6->is_signature == 1)
+                                <div class="text-center mb-4">
+                                    <img src="{{asset('storage/uploads/signature/'. $check_signature->user->signature)}}" alt="" height="80">
+                                </div>
+                                <div class="alert alert-success">
+                                    <i class="bx bx-check-circle me-1"></i> Pengajuan Request Perubahan CMF sudah ditanda tangan dan sudah disetujui
+                                </div>
+                                <div class="text-end">
+                                    <button type="button" class="btn btn-dark btn-sm" data-bs-toggle="modal" data-bs-target="#noteModalPerubahan"><i class="bx bx-note me-2"></i>Cek Catatan</button>
+                                </div>
+                            @else
+                                <div class="alert alert-danger">
+                                    Pengajuan Request Perubahan CMF tidak disetujui
+                                </div>
+                            @endif
                         @else
                             <div class="d-block d-grid gap-2">
                                 <button type="button" class="btn btn-success mb-3" data-bs-toggle="modal" data-bs-target="#requestModalPerubahan">Setuju</button>
@@ -291,21 +315,33 @@
                 <hr class="my-0">
                 <div class="card-body">
                     @if($cmf->activity)
-                        @if($check_signature_step_7)
-                            <div class="text-center mb-4">
-                                <img src="{{asset('storage/uploads/signature/'. $check_signature->user->signature)}}" alt="" height="80">
-                            </div>
-                            <div class="alert alert-success">
-                                <i class="bx bx-check-circle me-1"></i> Request perubahan CMF berhasil di evaluasi dan verifikasi
-                            </div>
-                            <div class="text-end">
-                                <button type="button" class="btn btn-dark btn-sm" data-bs-toggle="modal" data-bs-target="#reviewModalEvaluasiVerifikasi"><i class="bx bx-note me-2"></i>Cek Evaluasi</button>
-                            </div>
-                        @else
-                            <div class="d-block d-grid gap-2">
-                                <button type="button" class="btn btn-success mb-3" data-bs-toggle="modal" data-bs-target="#requestModalEvaluasiVerifikasi">Setuju</button>
-                                <button type="button" class="btn btn-danger mb-3" data-bs-toggle="modal" data-bs-target="#dontRequestModalPerubahanEvaluasiVerifikasi">Tidak Setuju</button>
-                            </div>
+                        @if($check_signature_step_6 != null)
+                            @if($check_signature_step_6->is_signature == 1)
+                                @if($check_signature_step_7 != null)
+                                    @if($check_signature_step_7->is_signature == 1)
+                                        <div class="text-center mb-4">
+                                            <img src="{{asset('storage/uploads/signature/'. $check_signature->user->signature)}}" alt="" height="80">
+                                        </div>
+                                        <div class="alert alert-success">
+                                            <i class="bx bx-check-circle me-1"></i> Request perubahan CMF berhasil di evaluasi dan verifikasi
+                                        </div>
+                                        <div class="text-end">
+                                            <button type="button" class="btn btn-dark btn-sm" data-bs-toggle="modal" data-bs-target="#reviewModalEvaluasiVerifikasi"><i class="bx bx-note me-2"></i>Cek Evaluasi</button>
+                                        </div>
+                                    @else
+                                        <div class="alert alert-danger">
+                                            Evaluasi & Verifikasi Tidak Disetujui
+                                        </div>
+                                    @endif
+                                @else
+                                    <div class="d-block d-grid gap-2">
+                                        <button type="button" class="btn btn-success mb-3" data-bs-toggle="modal" data-bs-target="#requestModalEvaluasiVerifikasi">Setuju</button>
+                                        <button type="button" class="btn btn-danger mb-3" data-bs-toggle="modal" data-bs-target="#dontRequestModalEvaluasiVerifikasi">Tidak Setuju</button>
+                                    </div>
+                                @endif
+                            @else
+                                <div class="alert alert-danger">Depthead PIC tidak menyetujui</div>
+                            @endif
                         @endif
                     @else
                         <div class="alert alert-danger">
@@ -321,18 +357,37 @@
                 <hr class="my-0">
                 <div class="card-body">
                     @if($cmf->activity)
-                        @if($check_signature_step_8)
-                            <div class="text-center mb-4">
-                                <img src="{{asset('storage/uploads/signature/'. $check_signature->user->signature)}}" alt="" height="80">
-                            </div>
-                            <div class="alert alert-success">
-                                <i class="bx bx-check-circle me-1"></i> Request perubahan CMF berhasil di verifikasi
-                            </div>
-                        @else
-                            <div class="d-block d-grid gap-2">
-                                <button type="button" class="btn btn-success mb-3" data-bs-toggle="modal" data-bs-target="#requestModalMrVerifikasi">Setuju</button>
-                                <button type="button" class="btn btn-danger mb-3" data-bs-toggle="modal" data-bs-target="#dontRequestModalMrVerifikasi">Tidak Setuju</button>
-                            </div>
+                        @if($check_signature_step_6 != null)
+                            @if($check_signature_step_6->is_signature == 0)
+                                <div class="alert alert-danger">Depthead PIC tidak menyetujui</div>
+                            @else
+                                @if($check_signature_step_7_signature_0_count != null)
+                                    @if($check_signature_step_7_signature_0_count > 0)
+                                        <div class="alert alert-danger">Salah satu depthead tidak menyetujui</div>
+                                    @endif
+                                @else
+                                    @if($check_signature_step_8 != null)
+                                        @if($check_signature_step_8->is_signature == 1)
+                                            <div class="text-center mb-4">
+                                                <img src="{{asset('storage/uploads/signature/'. $check_signature->user->signature)}}" alt="" height="80">
+                                            </div>
+                                            <div class="alert alert-success">
+                                                <i class="bx bx-check-circle me-1"></i> Request perubahan CMF berhasil di verifikasi
+                                            </div>
+                                        @else
+                                            <div class="alert alert-danger">
+                                                <i class="bx bx-check-circle me-1"></i> Request perubahan CMF tidak di setujui
+                                            </div>
+                                        @endif
+                                    @else
+                                        <div class="d-block d-grid gap-2">
+                                            <button type="button" class="btn btn-success mb-3" data-bs-toggle="modal" data-bs-target="#requestModalMrVerifikasi">Setuju</button>
+                                                    <button type="button" class="btn btn-danger mb-3" data-bs-toggle="modal" data-bs-target="#dontRequestModalMrVerifikasi">Tidak Setuju</button>
+                                        </div>
+                                    @endif
+                                @endif
+
+                            @endif
                         @endif
                     @else
                         <div class="alert alert-danger">
@@ -348,18 +403,44 @@
                 <hr class="my-0">
                 <div class="card-body">
                     @if($cmf->activity)
-                        @if($check_signature_step_9)
-                            <div class="text-center mb-4">
-                                <img src="{{asset('storage/uploads/signature/'. $check_signature->user->signature)}}" alt="" height="80">
-                            </div>
-                            <div class="alert alert-success">
-                                <i class="bx bx-check-circle me-1"></i> Request perubahan CMF berhasil di verifikasi
-                            </div>
-                        @else
-                            <div class="d-block d-grid gap-2">
-                                <button type="button" class="btn btn-success mb-3" data-bs-toggle="modal" data-bs-target="#requestModalDcVerifikasi">Setuju</button>
-                                <button type="button" class="btn btn-danger mb-3" data-bs-toggle="modal" data-bs-target="#dontRequestModalDcVerifikasi">Tidak Setuju</button>
-                            </div>
+                        @if($check_signature_step_6 != null)
+                            @if($check_signature_step_6->is_signature == 0)
+                                <div class="alert alert-danger">Depthead PIC Tidak menyetujui</div>
+                            @else
+                                @if($check_signature_step_7_signature_0_count != null)
+                                    @if($check_signature_step_7_signature_0_count > 0)
+                                        <div class="alert alert-danger">Salah satu depthead area terkait ada yang tidak menyetujui</div>
+                                    @endif
+                                @else
+                                    @if($check_signature_step_8 != null)
+                                        @if($check_signature_step_8->is_signature == 0)
+                                            <div class="alert alert-danger">MR & Food Safety Team tidak menyetujui</div>
+                                        @else
+                                            @if($check_signature_step_9 != null)
+                                                @if($check_signature_step_9->is_signature == 1)
+                                                    <div class="text-center mb-4">
+                                                        <img src="{{asset('storage/uploads/signature/'. $check_signature->user->signature)}}" alt="" height="80">
+                                                    </div>
+                                                    <div class="alert alert-success">
+                                                        <i class="bx bx-check-circle me-1"></i> Request perubahan CMF berhasil di verifikasi
+                                                    </div>
+                                                @else
+                                                    <div class="alert alert-danger">
+                                                        Request Verifikasi CMF Tidak Disetujui
+                                                    </div>
+                                                @endif
+                                            @else
+                                                <div class="d-block d-grid gap-2">
+                                                    <button type="button" class="btn btn-success mb-3" data-bs-toggle="modal" data-bs-target="#requestModalDcVerifikasi">Setuju</button>
+                                                    <button type="button" class="btn btn-danger mb-3" data-bs-toggle="modal" data-bs-target="#dontRequestModalDcVerifikasi">Tidak Setuju</button>
+                                                </div>
+                                            @endif
+                                        @endif
+                                    @else
+                                        <div class="alert alert-danger">Harap bersabar karena proses yang dilakukan secara burutan</div>
+                                    @endif
+                                @endif
+                            @endif
                         @endif
                     @else
                         <div class="alert alert-danger">

@@ -46,6 +46,10 @@
                         <label for="no_cmf" class="form-label">NO CMF</label>
                         <input type="text" name="no_cmf" id="no_cmf" class="form-control bg-dark text-white" value="{{$cmf->no_cmf}}" readonly>
                     </div>
+                    <div class="form-group mb-4">
+                        <label for="catatan" class="form-label">Catatan</label>
+                        <textarea name="catatan" id="catatan" cols="30" rows="10" class="form-control form-control-lg"></textarea>
+                    </div>
                     <div class="my-4 text-end">
                         <button type="submit" class="btn btn-danger"><i class="bx bx-mail-send me-2"></i>Tidak Setuju </button>
                     </div>
@@ -111,14 +115,18 @@
             </div>
             <div class="modal-body">
                 <p>Apakah anda yakin untuk tidak menyetujui <strong>Request Perubahan CMF ini?</strong> Harap periksa kembali Request perubahan CMF yang diajukan, apabila anda tidak menyetujui maka tidak dapat dirubah kembali</p>
-                <form action="{{route('cmf.revised',['slug' => $cmf->slug])}}" method="post">
+                <form action="{{route('cmf.activity',['slug' => $cmf->slug])}}" method="post">
                     @csrf
                     <div class="form-group mb-4">
                         <label for="no_cmf" class="form-label">NO CMF</label>
                         <input type="text" name="no_cmf" id="no_cmf" class="form-control bg-dark text-white" value="{{$cmf->no_cmf}}" readonly>
                     </div>
+                    <div class="form-group mb-4">
+                        <label for="catatan" class="form-label">Catatan</label>
+                        <textarea name="catatan" id="catatan" cols="30" rows="10" class="form-control form-control-lg"></textarea>
+                    </div>
                     <div class="my-4 text-end">
-                        <button type="submit" class="btn btn-danger"><i class="bx bx-mail-send me-2"></i>Tidak Setuju </button>
+                        <button type="submit" name="btn_review" value="tidak_setuju" class="btn btn-danger"><i class="bx bx-mail-send me-2"></i>Tidak Setuju </button>
                     </div>
                 </form>
             </div>
@@ -189,6 +197,10 @@
                         <label for="no_cmf" class="form-label">NO CMF</label>
                         <input type="text" name="no_cmf" id="no_cmf" class="form-control bg-dark text-white" value="{{$cmf->no_cmf}}" readonly>
                     </div>
+                    <div class="form-group mb-4">
+                        <label for="review" class="form-label">Review</label>
+                        <textarea name="review" id="review" cols="30" rows="10" class="form-control form-control-lg"></textarea>
+                    </div>
                     <div class="my-4 text-end">
                         <button type="submit" class="btn btn-danger"><i class="bx bx-mail-send me-2"></i>Tidak Setuju </button>
                     </div>
@@ -253,14 +265,18 @@
             </div>
             <div class="modal-body">
                 <p>Apakah anda yakin untuk tidak menyetujui <strong>Request Review CMF ini?</strong> Harap periksa kembali Request Review CMF yang diajukan, apabila anda tidak menyetujui maka tidak dapat dirubah kembali</p>
-                <form action="{{route('cmf.revised',['slug' => $cmf->slug])}}" method="post">
+                <form action="{{route('cmf.activity',['slug' => $cmf->slug])}}" method="post">
                     @csrf
                     <div class="form-group mb-4">
                         <label for="no_cmf" class="form-label">NO CMF</label>
                         <input type="text" name="no_cmf" id="no_cmf" class="form-control bg-dark text-white" value="{{$cmf->no_cmf}}" readonly>
                     </div>
+                    <div class="form-group mb-4">
+                        <label for="evaluasi" class="form-label">Evaluasi</label>
+                        <textarea name="evaluasi" id="evaluasi" cols="30" rows="10" class="form-control form-control-lg"></textarea>
+                    </div>
                     <div class="my-4 text-end">
-                        <button type="submit" class="btn btn-danger"><i class="bx bx-mail-send me-2"></i>Tidak Setuju </button>
+                        <button type="submit" name="btn_review" value="evaluasi_verifikasi_tidak_setuju" class="btn btn-danger"><i class="bx bx-mail-send me-2"></i>Tidak Setuju </button>
                     </div>
                 </form>
             </div>
@@ -463,14 +479,14 @@
             </div>
             <div class="modal-body">
                 <p>Apakah anda yakin untuk tidak menyetujui <strong>Request Review CMF ini?</strong> Harap periksa kembali Request Review CMF yang diajukan, apabila anda tidak menyetujui maka tidak dapat dirubah kembali</p>
-                <form action="{{route('cmf.revised',['slug' => $cmf->slug])}}" method="post">
+                <form action="{{route('cmf.activity',['slug' => $cmf->slug])}}" method="post">
                     @csrf
                     <div class="form-group mb-4">
                         <label for="no_cmf" class="form-label">NO CMF</label>
                         <input type="text" name="no_cmf" id="no_cmf" class="form-control bg-dark text-white" value="{{$cmf->no_cmf}}" readonly>
                     </div>
                     <div class="my-4 text-end">
-                        <button type="submit" class="btn btn-danger"><i class="bx bx-mail-send me-2"></i>Tidak Setuju </button>
+                        <button type="submit" name="btn_review" value="verifikasi_tidak_setuju" class="btn btn-danger"><i class="bx bx-mail-send me-2"></i>Tidak Setuju </button>
                     </div>
                 </form>
             </div>
@@ -513,14 +529,14 @@
             </div>
             <div class="modal-body">
                 <p>Apakah anda yakin untuk tidak menyetujui <strong>Request Review CMF ini?</strong> Harap periksa kembali Request Review CMF yang diajukan, apabila anda tidak menyetujui maka tidak dapat dirubah kembali</p>
-                <form action="{{route('cmf.revised',['slug' => $cmf->slug])}}" method="post">
+                <form action="{{route('cmf.activity',['slug' => $cmf->slug])}}" method="post">
                     @csrf
                     <div class="form-group mb-4">
                         <label for="no_cmf" class="form-label">NO CMF</label>
                         <input type="text" name="no_cmf" id="no_cmf" class="form-control bg-dark text-white" value="{{$cmf->no_cmf}}" readonly>
                     </div>
                     <div class="my-4 text-end">
-                        <button type="submit" class="btn btn-danger"><i class="bx bx-mail-send me-2"></i>Tidak Setuju </button>
+                        <button type="submit" name="btn_review" value="verifikasi_tidak_setuju" class="btn btn-danger"><i class="bx bx-mail-send me-2"></i>Tidak Setuju </button>
                     </div>
                 </form>
             </div>

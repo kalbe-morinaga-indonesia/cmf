@@ -24,11 +24,69 @@
                 <div class="alert alert-success">{{ session()->get('message') }}</div>
             </div>
         </div>
+        @elseif(session()->has('message-error'))
+        <div class="card mb-4">
+            <div class="card-body">
+                <div class="alert alert-danger">{{ session()->get('message-error') }}</div>
+            </div>
+        </div>
     @endif
 
     @role('pic')
     <div class="row-mb-4">
         <div class="col-lg-12">
+           @if($check_signature_step_1 != null)
+                @if($check_signature_step_1->is_signature == 0)
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="card mb-4">
+                                <h5 class="card-header bg-danger text-white">Request Pengajuan Tidak Disetujui Oleh Depthead PIC</h5>
+                                <div class="card-body">
+                                    <p class="card-header text-center text-dark">Catatan Depthead PIC</p>
+                                    <p>{{$check_signature_step_1->catatan ?? 'Tidak ada catatan'}}</p>
+                                    <div class="text-end">
+                                        <a href="{{route('cmf.create')}}" class="btn btn-primary"><i class="bx bx-plus me-2"></i>Buat CMF Baru</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                @elseif($check_signature_step_2_count > 0)
+                    <div class="row">
+                        <div class="col-lg-12">
+                            @foreach($check_signature_step_2 as $step)
+                                @if($step->is_signature == 0)
+                                    <div class="card mb-4">
+                                        <h5 class="card-header bg-danger text-white">Request Pengajuan Tidak Disetujui Oleh Depthead {{$step->user->department->txtNamaDept}}</h5>
+                                        <div class="card-body">
+                                            <p class="card-header text-center text-dark">Catatan Depthead {{$step->user->department->txtNamaDept}}</p>
+                                            <p>{{$step->review->review ?? 'Tidak ada review'}}</p>
+                                        </div>
+                                    </div>
+                                @endif
+                            @endforeach
+                        </div>
+                    </div>
+                @endif
+           @endif
+            @if($check_signature_step_3 != null)
+                    @if($check_signature_step_3->is_signature == 0)
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <div class="alert alert-danger">Request CMF tidak disetujui Oleh SVP System</div>
+                            </div>
+                        </div>
+                    @endif
+            @endif
+                @if($check_signature_step_4 != null)
+                    @if($check_signature_step_4->is_signature == 0)
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <div class="alert alert-danger">Request CMF tidak disetujui Oleh MNF</div>
+                            </div>
+                        </div>
+                    @endif
+                @endif
             <div class="card mb-4">
                 <div class="card-body">
                     <div class="row">
@@ -103,6 +161,9 @@
                             <div class="alert alert-danger">
                                 <i class="bx bx-check-circle me-1"></i> Pengajuan Request Perubahan CMF tidak disetujui
                             </div>
+                            <div class="text-end">
+                                <button type="button" class="btn btn-dark btn-sm" data-bs-toggle="modal" data-bs-target="#noteModal"><i class="bx bx-note me-2"></i>Cek Catatan</button>
+                            </div>
                         @endif
                     @else
                         <div class="d-block d-grid gap-2">
@@ -119,167 +180,39 @@
     @role('depthead')
     <div class="row mb-4">
         <div class="col-lg-8">
-            @if($check_signature_step_1)
-                <div class="row">
-                    <div class="col-lg-12">
-                        <div class="card mb-4">
-                            <h5 class="card-header bg-dark text-white">Dept Head PIC</h5>
-                            <div class="card-body">
-                                <div class="row">
-                                    <div class="col-lg-3">
-                                        <p class="text-center text-dark card-header">Dibuat Oleh</p>
-                                        <div class="text-center">
-                                            <img src="{{asset('storage/uploads/signature/'. $cmf->user->signature)}}" alt="" height="80" class="mb-2">
-                                            <p class="text-dark">{{$cmf->user->name}}</p>
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-6">
-                                        <p class="card-header text-center text-dark">Catatan Depthead PIC</p>
-                                        <p>{{$check_signature_step_1->catatan ?? 'Tidak ada catatan'}}</p>
-                                    </div>
-                                    <div class="col-lg-3">
-                                        <p class="text-center text-dark card-header">Disetujui Oleh</p>
-                                        <div class="text-center">
-                                            <img src="{{asset('storage/uploads/signature/'. $check_signature_step_1->user->signature)}}" alt="" height="80">
-                                            <p class="text-dark">{{$check_signature_step_1->user->name}}</p>
-                                        </div>
-                                    </div>
-                                </div>
-
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            @endif
-            <div class="card mb-4">
-                <div class="card-body">
-                    <div class="row mb-4">
-                        <div class="col-lg-6">
-                            <label for="department" class="form-label">Department</label>
-                            <input type="text" class="form-control bg-info text-white" value="{{$cmf->department->txtNamaDept}}" disabled>
-                        </div>
-                        <div class="col-lg-6">
-                            <label for="no_cmf" class="form-label">No CMF</label>
-                            <input type="text" class="form-control bg-info text-white" value="{{$cmf->no_cmf}}" disabled>
-                        </div>
-                    </div>
-                    <div class="row mb-4">
-                        <div class="col-lg-6">
-                            <label for="inserted_by" class="form-label">Diajukan Oleh</label>
-                            <input type="text" class="form-control bg-info text-white" value="{{$cmf->inserted_by}}" disabled>
-                        </div>
-                        <div class="col-lg-6">
-                            <label for="status" class="form-label">Status</label>
-                            <input type="text" class="form-control bg-success text-white" value="{{$cmf->status_pengajuan}}" disabled>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-lg-4">
-            <div class="card mb-4">
-                <h5 class="card-header">Keputusan Perubahan</h5>
-                <hr class="my-0">
-                <div class="card-body">
-                    @if($check_signature != null)
-                        @if($check_signature->is_signature == 1 && $check_signature->step == 2)
-                            <div class="text-center mb-4">
-                                <img src="{{asset('storage/uploads/signature/'. $check_signature->user->signature)}}" alt="" height="80">
-                            </div>
-                            <div class="alert alert-success">
-                                <i class="bx bx-check-circle me-1"></i> Request Review CMF sudah disetujui
-                            </div>
-                            <div class="text-end">
-                                <button type="button" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#reviewModal"><i class="bx bx-note me-2"></i>Cek Review</button>
-                            </div>
-                        @elseif($check_signature->is_signature == 0 && $check_signature->step == 2)
-                            <div class="alert alert-danger">
-                                <i class="bx bx-check-circle me-1"></i> Request Review CMF tidak disetujui
-                            </div>
-                        @endif
-                    @else
-                        @if($check_signature_step_1)
-                            <div class="d-block d-grid gap-2">
-                                <button type="button" class="btn btn-success mb-3" data-bs-toggle="modal" data-bs-target="#requestModalDepthead">Setuju</button>
-                                <button type="button" class="btn btn-danger mb-3" data-bs-toggle="modal" data-bs-target="#dontRequestModalDepthead">Tidak Setuju</button>
-                            </div>
-                            @else
-                            <div class="alert alert-danger">
-                                Request perubahan CMF belum disetejui oleh depthead PIC
-                            </div>
-                        @endif
-
-                    @endif
-                </div>
-            </div>
-        </div>
-    </div>
-    @endrole
-
-    @role('svp system')
-    <div class="row mb-4">
-        <div class="col-lg-8">
-            @if($check_signature_step_1)
-                <div class="row">
-                    <div class="col-lg-12">
-                        <div class="card mb-4">
-                            <h5 class="card-header bg-dark text-white">Dept Head PIC</h5>
-                            <div class="card-body">
-                                <div class="row">
-                                    <div class="col-lg-3">
-                                        <p class="text-center text-dark card-header">Dibuat Oleh</p>
-                                        <div class="text-center">
-                                            <img src="{{asset('storage/uploads/signature/'. $cmf->user->signature)}}" alt="" height="80" class="mb-2">
-                                            <p class="text-dark">{{$cmf->user->name}}</p>
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-6">
-                                        <p class="card-header text-center text-dark">Catatan Depthead PIC</p>
-                                        <p>{{$check_signature_step_1->catatan ?? 'Tidak ada catatan'}}</p>
-                                    </div>
-                                    <div class="col-lg-3">
-                                        <p class="text-center text-dark card-header">Disetujui Oleh</p>
-                                        <div class="text-center">
-                                            <img src="{{asset('storage/uploads/signature/'. $check_signature_step_1->user->signature)}}" alt="" height="80">
-                                            <p class="text-dark">{{$check_signature_step_1->user->name}}</p>
-                                        </div>
-                                    </div>
-                                </div>
-
-                            </div>
-                        </div>
-                        @if($depthead_area_terkait->departments_count == $check_signature_step_2_count)
-                            @foreach($signature_reviews as $review)
-                                <div class="card mb-4">
-                                    <h5 class="card-header bg-dark text-white">Dept Head Area Terkait {{$review->review->department->txtNamaDept}}</h5>
-                                    <div class="card-body">
-                                        <div class="row">
-                                            <div class="col-lg-3">
-                                                <p class="text-center text-dark card-header">Dibuat Oleh</p>
-                                                <div class="text-center">
-                                                    <img src="{{asset('storage/uploads/signature/'. $cmf->user->signature)}}" alt="" height="80" class="mb-2">
-                                                    <p class="text-dark">{{$cmf->user->name}}</p>
-                                                </div>
-                                            </div>
-                                            <div class="col-lg-6">
-                                                <p class="card-header text-center text-dark">Catatan Depthead {{$review->review->department->txtNamaDept}}</p>
-                                                <p>{{$review->review->review ?? 'Tidak ada review'}}</p>
-                                            </div>
-                                            <div class="col-lg-3">
-                                                <p class="text-center text-dark card-header">Disetujui Oleh</p>
-                                                <div class="text-center">
-                                                    <img src="{{asset('storage/uploads/signature/'. $review->user->signature)}}" alt="" height="80">
-                                                    <p class="text-dark">{{$review->review->signature->user->name}}</p>
-                                                </div>
+            @if($check_signature_step_1 != null)
+                @if($check_signature_step_1->is_signature == 1)
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="card mb-4">
+                                <h5 class="card-header bg-dark text-white">Dept Head PIC</h5>
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-lg-3">
+                                            <p class="text-center text-dark card-header">Dibuat Oleh</p>
+                                            <div class="text-center">
+                                                <img src="{{asset('storage/uploads/signature/'. $cmf->user->signature)}}" alt="" height="80" class="mb-2">
+                                                <p class="text-dark">{{$cmf->user->name}}</p>
                                             </div>
                                         </div>
-
+                                        <div class="col-lg-6">
+                                            <p class="card-header text-center text-dark">Catatan Depthead PIC</p>
+                                            <p>{{$check_signature_step_1->catatan ?? 'Tidak ada catatan'}}</p>
+                                        </div>
+                                        <div class="col-lg-3">
+                                            <p class="text-center text-dark card-header">Disetujui Oleh</p>
+                                            <div class="text-center">
+                                                <img src="{{asset('storage/uploads/signature/'. $check_signature_step_1->user->signature)}}" alt="" height="80">
+                                                <p class="text-dark">{{$check_signature_step_1->user->name}}</p>
+                                            </div>
+                                        </div>
                                     </div>
+
                                 </div>
-                            @endforeach
-                        @endif
+                            </div>
+                        </div>
                     </div>
-                </div>
+                @endif
             @endif
             <div class="card mb-4">
                 <div class="card-body">
@@ -311,32 +244,209 @@
                 <h5 class="card-header">Keputusan Perubahan</h5>
                 <hr class="my-0">
                 <div class="card-body">
-                    @if($depthead_area_terkait->departments_count == $check_signature_step_2_count)
-                        @if($check_signature != null)
-                            @if($check_signature->is_signature == 1 && $check_signature->step == 3)
-                                <div class="text-center mb-4">
-                                    <img src="{{asset('storage/uploads/signature/'. $check_signature->user->signature)}}" alt="" height="80">
-                                </div>
-                                <div class="alert alert-success">
-                                    <i class="bx bx-check-circle me-1"></i> Request Review CMF sudah disetujui
-                                </div>
-                            @elseif($check_signature->is_signature == 0 && $check_signature->step == 3)
-                                <div class="alert alert-danger">
-                                    <i class="bx bx-check-circle me-1"></i> Request Review CMF tidak disetujui
-                                </div>
-                            @endif
-                        @else
-                            <div class="d-block d-grid gap-2">
-                                <button type="button" class="btn btn-success mb-3" data-bs-toggle="modal" data-bs-target="#requestModalSvp">Setuju</button>
-                                <button type="button" class="btn btn-danger mb-3" data-bs-toggle="modal" data-bs-target="#dontRequestModalSvp">Tidak Setuju</button>
+                    @if($check_signature != null)
+                        @if($check_signature->is_signature == 1 && $check_signature->step == 2)
+                            <div class="text-center mb-4">
+                                <img src="{{asset('storage/uploads/signature/'. $check_signature->user->signature)}}" alt="" height="80">
+                            </div>
+                            <div class="alert alert-success">
+                                <i class="bx bx-check-circle me-1"></i> Request Review CMF sudah disetujui
+                            </div>
+                            <div class="text-end">
+                                <button type="button" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#reviewModal"><i class="bx bx-note me-2"></i>Cek Review</button>
+                            </div>
+                        @elseif($check_signature->is_signature == 0 && $check_signature->step == 2)
+                            <div class="alert alert-danger">
+                                <i class="bx bx-check-circle me-1"></i> Request Review CMF tidak disetujui
+                            </div>
+                            <div class="text-end">
+                                <button type="button" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#reviewModal"><i class="bx bx-note me-2"></i>Cek Review</button>
                             </div>
                         @endif
                     @else
+                        @if($check_signature_step_1 != null)
+                            @if($check_signature_step_1->is_signature == 1)
+                                <div class="d-block d-grid gap-2">
+                                    <button type="button" class="btn btn-success mb-3" data-bs-toggle="modal" data-bs-target="#requestModalDepthead">Setuju</button>
+                                    <button type="button" class="btn btn-danger mb-3" data-bs-toggle="modal" data-bs-target="#dontRequestModalDepthead">Tidak Setuju</button>
+                                </div>
+                            @elseif($check_signature_step_1 -> is_siganature == 0)
+                                <div class="alert alert-danger">
+                                    Request perubahan CMF tidak disetejui oleh depthead PIC
+                                </div>
+                            @else
+                                <div class="alert alert-danger">
+                                    Request perubahan CMF belum disetejui oleh depthead PIC
+                                </div>
+                            @endif
+                        @else
+                            <div class="alert alert-danger">
+                                Harap tunggu karena proses ini dilakukan secara berurutan
+                            </div>
+                        @endif
+
+                    @endif
+                </div>
+            </div>
+        </div>
+    </div>
+    @endrole
+
+    @role('svp system')
+    <div class="row mb-4">
+        <div class="col-lg-8">
+            @if($check_signature_step_1 != null)
+                @if($check_signature_step_1->is_signature == 1)
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="card mb-4">
+                                <h5 class="card-header bg-dark text-white">Dept Head PIC</h5>
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-lg-3">
+                                            <p class="text-center text-dark card-header">Dibuat Oleh</p>
+                                            <div class="text-center">
+                                                <img src="{{asset('storage/uploads/signature/'. $cmf->user->signature)}}" alt="" height="80" class="mb-2">
+                                                <p class="text-dark">{{$cmf->user->name}}</p>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-6">
+                                            <p class="card-header text-center text-dark">Catatan Depthead PIC</p>
+                                            <p>{{$check_signature_step_1->catatan ?? 'Tidak ada catatan'}}</p>
+                                        </div>
+                                        <div class="col-lg-3">
+                                            <p class="text-center text-dark card-header">Disetujui Oleh</p>
+                                            <div class="text-center">
+                                                <img src="{{asset('storage/uploads/signature/'. $check_signature_step_1->user->signature)}}" alt="" height="80">
+                                                <p class="text-dark">{{$check_signature_step_1->user->name}}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                            @if($depthead_area_terkait->departments_count == $check_signature_step_2_count)
+                                @foreach($signature_reviews as $review)
+                                    @if($review->is_signature == 1)
+                                        <div class="card mb-4">
+                                            <h5 class="card-header bg-dark text-white">Dept Head Area Terkait {{$review->review->department->txtNamaDept}}</h5>
+                                            <div class="card-body">
+                                                <div class="row">
+                                                    <div class="col-lg-3">
+                                                        <p class="text-center text-dark card-header">Dibuat Oleh</p>
+                                                        <div class="text-center">
+                                                            <img src="{{asset('storage/uploads/signature/'. $cmf->user->signature)}}" alt="" height="80" class="mb-2">
+                                                            <p class="text-dark">{{$cmf->user->name}}</p>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-lg-6">
+                                                        <p class="card-header text-center text-dark">Catatan Depthead {{$review->review->department->txtNamaDept}}</p>
+                                                        <p>{{$review->review->review ?? 'Tidak ada review'}}</p>
+                                                    </div>
+                                                    <div class="col-lg-3">
+                                                        <p class="text-center text-dark card-header">Disetujui Oleh</p>
+                                                        <div class="text-center">
+                                                            <img src="{{asset('storage/uploads/signature/'. $review->user->signature)}}" alt="" height="80">
+                                                            <p class="text-dark">{{$review->review->signature->user->name}}</p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    @endif
+                                    @if($review->is_signature == 0)
+                                        <div class="card mb-4">
+                                            <h5 class="card-header bg-danger text-white">Dept Head Area Terkait {{$review->review->department->txtNamaDept}} Tidak Menyetujui</h5>
+                                            <div class="card-body">
+                                                <p class="card-header text-center text-dark">Review Depthead {{$review->review->department->txtNamaDept}}</p>
+                                                <p>{{$review->review->review ?? 'Tidak ada review'}}</p>
+                                            </div>
+                                        </div>
+                                    @endif
+                                @endforeach
+                            @endif
+                        </div>
+                    </div>
+                @else
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="alert alert-danger">Depthead PIC tidak menyetujui</div>
+                        </div>
+                    </div>
+                @endif
+            @endif
+            <div class="card mb-4">
+                <div class="card-body">
+                    <div class="row mb-4">
+                        <div class="col-lg-6">
+                            <label for="department" class="form-label">Department</label>
+                            <input type="text" class="form-control bg-info text-white" value="{{$cmf->department->txtNamaDept}}" disabled>
+                        </div>
+                        <div class="col-lg-6">
+                            <label for="no_cmf" class="form-label">No CMF</label>
+                            <input type="text" class="form-control bg-info text-white" value="{{$cmf->no_cmf}}" disabled>
+                        </div>
+                    </div>
+                    <div class="row mb-4">
+                        <div class="col-lg-6">
+                            <label for="inserted_by" class="form-label">Diajukan Oleh</label>
+                            <input type="text" class="form-control bg-info text-white" value="{{$cmf->inserted_by}}" disabled>
+                        </div>
+                        <div class="col-lg-6">
+                            <label for="status" class="form-label">Status</label>
+                            <input type="text" class="form-control bg-info text-white" value="{{$cmf->status_pengajuan}}" disabled>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <div class="card mb-4">
+                <h5 class="card-header">Keputusan Perubahan</h5>
+                <hr class="my-0">
+                <div class="card-body">
+                    @if($check_signature_step_1 != null)
+                        @if($check_signature_step_1->is_signature == 1)
+                            @if($depthead_area_terkait->departments_count == $check_signature_step_2_count)
+                                @if($check_signature != null)
+                                    @if($check_signature->is_signature == 1 && $check_signature->step == 3)
+                                        <div class="text-center mb-4">
+                                            <img src="{{asset('storage/uploads/signature/'. $check_signature->user->signature)}}" alt="" height="80">
+                                        </div>
+                                        <div class="alert alert-success">
+                                            <i class="bx bx-check-circle me-1"></i> Request Review CMF sudah disetujui
+                                        </div>
+                                    @elseif($check_signature->is_signature == 0 && $check_signature->step == 3)
+                                        <div class="alert alert-danger">
+                                            <i class="bx bx-check-circle me-1"></i> Request Review CMF tidak disetujui
+                                        </div>
+                                    @endif
+                                @else
+                                    @if($check_signature_step_2_has_signature_count == 0)
+                                        <div class="d-block d-grid gap-2">
+                                            <button type="button" class="btn btn-success mb-3" data-bs-toggle="modal" data-bs-target="#requestModalSvp">Setuju</button>
+                                            <button type="button" class="btn btn-danger mb-3" data-bs-toggle="modal" data-bs-target="#dontRequestModalSvp">Tidak Setuju</button>
+                                        </div>
+                                    @else
+                                        <div class="alert alert-danger">
+                                            Terdapat depthead area terkait yang tidak menyetujui
+                                        </div>
+                                    @endif
+                                @endif
+                            @else
+                                <div class="alert alert-danger">
+                                    Semua Depthead area terkait belum menyetujui request review CMF
+                                </div>
+                            @endif
+                        @else
+                            <div class="alert alert-danger">Depthead PIC tidak menyetujui request CMF</div>
+                        @endif
+                        @else
                         <div class="alert alert-danger">
-                            Semua Depthead area terkait belum menyetujui request review CMF
+                            Harap tunggu karena proses ini dilakukan secara berurutan
                         </div>
                     @endif
-
                 </div>
             </div>
         </div>
@@ -346,67 +456,86 @@
     @role('mnf')
     <div class="row mb-4">
         <div class="col-lg-8">
-            @if($check_signature_step_1)
-                <div class="row">
-                    <div class="col-lg-12">
-                        <div class="card mb-4">
-                            <h5 class="card-header bg-dark text-white">Dept Head PIC</h5>
-                            <div class="card-body">
-                                <div class="row">
-                                    <div class="col-lg-3">
-                                        <p class="text-center text-dark card-header">Dibuat Oleh</p>
-                                        <div class="text-center">
-                                            <img src="{{asset('storage/uploads/signature/'. $cmf->user->signature)}}" alt="" height="80" class="mb-2">
-                                            <p class="text-dark">{{$cmf->user->name}}</p>
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-6">
-                                        <p class="card-header text-center text-dark">Catatan Depthead PIC</p>
-                                        <p>{{$check_signature_step_1->catatan ?? 'Tidak ada catatan'}}</p>
-                                    </div>
-                                    <div class="col-lg-3">
-                                        <p class="text-center text-dark card-header">Disetujui Oleh</p>
-                                        <div class="text-center">
-                                            <img src="{{asset('storage/uploads/signature/'. $check_signature_step_1->user->signature)}}" alt="" height="80">
-                                            <p class="text-dark">{{$check_signature_step_1->user->name}}</p>
-                                        </div>
-                                    </div>
-                                </div>
-
-                            </div>
-                        </div>
-                        @if($depthead_area_terkait->departments_count == $check_signature_step_2_count)
-                            @foreach($signature_reviews as $review)
-                                <div class="card mb-4">
-                                    <h5 class="card-header bg-dark text-white">Dept Head Area Terkait {{$review->review->department->txtNamaDept}}</h5>
-                                    <div class="card-body">
-                                        <div class="row">
-                                            <div class="col-lg-3">
-                                                <p class="text-center text-dark card-header">Dibuat Oleh</p>
-                                                <div class="text-center">
-                                                    <img src="{{asset('storage/uploads/signature/'. $cmf->user->signature)}}" alt="" height="80" class="mb-2">
-                                                    <p class="text-dark">{{$cmf->user->name}}</p>
-                                                </div>
+            @if($check_signature_step_1 != null)
+                @if($check_signature_step_1->is_signature == 1)
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="card mb-4">
+                                <h5 class="card-header bg-dark text-white">Dept Head PIC</h5>
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-lg-3">
+                                            <p class="text-center text-dark card-header">Dibuat Oleh</p>
+                                            <div class="text-center">
+                                                <img src="{{asset('storage/uploads/signature/'. $cmf->user->signature)}}" alt="" height="80" class="mb-2">
+                                                <p class="text-dark">{{$cmf->user->name}}</p>
                                             </div>
-                                            <div class="col-lg-6">
-                                                <p class="card-header text-center text-dark">Catatan Depthead {{$review->review->department->txtNamaDept}}</p>
+                                        </div>
+                                        <div class="col-lg-6">
+                                            <p class="card-header text-center text-dark">Catatan Depthead PIC</p>
+                                            <p>{{$check_signature_step_1->catatan ?? 'Tidak ada catatan'}}</p>
+                                        </div>
+                                        <div class="col-lg-3">
+                                            <p class="text-center text-dark card-header">Disetujui Oleh</p>
+                                            <div class="text-center">
+                                                <img src="{{asset('storage/uploads/signature/'. $check_signature_step_1->user->signature)}}" alt="" height="80">
+                                                <p class="text-dark">{{$check_signature_step_1->user->name}}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                            @if($depthead_area_terkait->departments_count == $check_signature_step_2_count)
+                                @foreach($signature_reviews as $review)
+                                    @if($review->is_signature == 1)
+                                        <div class="card mb-4">
+                                            <h5 class="card-header bg-dark text-white">Dept Head Area Terkait {{$review->review->department->txtNamaDept}}</h5>
+                                            <div class="card-body">
+                                                <div class="row">
+                                                    <div class="col-lg-3">
+                                                        <p class="text-center text-dark card-header">Dibuat Oleh</p>
+                                                        <div class="text-center">
+                                                            <img src="{{asset('storage/uploads/signature/'. $cmf->user->signature)}}" alt="" height="80" class="mb-2">
+                                                            <p class="text-dark">{{$cmf->user->name}}</p>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-lg-6">
+                                                        <p class="card-header text-center text-dark">Catatan Depthead {{$review->review->department->txtNamaDept}}</p>
+                                                        <p>{{$review->review->review ?? 'Tidak ada review'}}</p>
+                                                    </div>
+                                                    <div class="col-lg-3">
+                                                        <p class="text-center text-dark card-header">Disetujui Oleh</p>
+                                                        <div class="text-center">
+                                                            <img src="{{asset('storage/uploads/signature/'. $review->user->signature)}}" alt="" height="80">
+                                                            <p class="text-dark">{{$review->review->signature->user->name}}</p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    @endif
+                                    @if($review->is_signature == 0)
+                                        <div class="card mb-4">
+                                            <h5 class="card-header bg-danger text-white">Dept Head Area Terkait {{$review->review->department->txtNamaDept}} Tidak Menyetujui</h5>
+                                            <div class="card-body">
+                                                <p class="card-header text-center text-dark">Review Depthead {{$review->review->department->txtNamaDept}}</p>
                                                 <p>{{$review->review->review ?? 'Tidak ada review'}}</p>
                                             </div>
-                                            <div class="col-lg-3">
-                                                <p class="text-center text-dark card-header">Disetujui Oleh</p>
-                                                <div class="text-center">
-                                                    <img src="{{asset('storage/uploads/signature/'. $review->user->signature)}}" alt="" height="80">
-                                                    <p class="text-dark">{{$review->review->signature->user->name}}</p>
-                                                </div>
-                                            </div>
                                         </div>
-
-                                    </div>
-                                </div>
-                            @endforeach
-                        @endif
+                                    @endif
+                                @endforeach
+                            @endif
+                        </div>
                     </div>
-                </div>
+                @else
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="alert alert-danger">Depthead PIC tidak menyetujui</div>
+                        </div>
+                    </div>
+                @endif
             @endif
             <div class="card mb-4">
                 <div class="card-body">
@@ -446,21 +575,38 @@
                             <div class="alert alert-success">
                                 <i class="bx bx-check-circle me-1"></i> Request Review CMF sudah disetujui
                             </div>
-                        @elseif($check_signature->is_signature == 0 && $check_signature->step == 4)
+
+                            @elseif($check_signature->is_signature == 0 && $check_signature->step == 4)
                             <div class="alert alert-danger">
                                 <i class="bx bx-check-circle me-1"></i> Request Review CMF tidak disetujui
                             </div>
                         @endif
                     @else
-                        @if($check_signature_step_3)
+                        @if($check_signature_step_3 != null)
                             <div class="d-block d-grid gap-2">
                                 <button type="button" class="btn btn-success mb-3" data-bs-toggle="modal" data-bs-target="#requestModalMnf">Setuju</button>
                                 <button type="button" class="btn btn-danger mb-3" data-bs-toggle="modal" data-bs-target="#dontRequestModalMnf">Tidak Setuju</button>
                             </div>
                         @else
-                            <div class="alert alert-danger">
-                                Request perubahan CMF belum disetejui oleh SVP System
-                            </div>
+                            @if($check_signature_step_1 != null)
+                                @if($check_signature_step_1->is_signature == 0)
+                                    <div class="alert alert-danger">
+                                        Request perubahan CMF tidak disetejui oleh Depthead PIC
+                                    </div>
+                                @else
+                                    @if($check_signature_step_2_has_signature_count > 0 || $check_signature_step_2_has_signature_count == 0)
+                                        <div class="alert alert-danger">
+                                            Request perubahan CMF belum disetujui semua oleh Depthead area terkait
+                                        </div>
+                                    @else
+                                        <div class="alert alert-danger">
+                                            Request perubahan CMF belum disetujui oleh SVP System
+                                        </div>
+                                    @endif
+                                @endif
+                            @else
+                                <div class="alert alert-danger">Harap tunggu karena proses ini dilakukan secara berurutan</div>
+                            @endif
                         @endif
                     @endif
                 </div>
@@ -472,67 +618,86 @@
     @role('mr & food safety team')
     <div class="row mb-4">
         <div class="col-lg-8">
-            @if($check_signature_step_1)
-                <div class="row">
-                    <div class="col-lg-12">
-                        <div class="card mb-4">
-                            <h5 class="card-header bg-dark text-white">Dept Head PIC</h5>
-                            <div class="card-body">
-                                <div class="row">
-                                    <div class="col-lg-3">
-                                        <p class="text-center text-dark card-header">Dibuat Oleh</p>
-                                        <div class="text-center">
-                                            <img src="{{asset('storage/uploads/signature/'. $cmf->user->signature)}}" alt="" height="80" class="mb-2">
-                                            <p class="text-dark">{{$cmf->user->name}}</p>
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-6">
-                                        <p class="card-header text-center text-dark">Catatan Depthead PIC</p>
-                                        <p>{{$check_signature_step_1->catatan ?? 'Tidak ada catatan'}}</p>
-                                    </div>
-                                    <div class="col-lg-3">
-                                        <p class="text-center text-dark card-header">Disetujui Oleh</p>
-                                        <div class="text-center">
-                                            <img src="{{asset('storage/uploads/signature/'. $check_signature_step_1->user->signature)}}" alt="" height="80">
-                                            <p class="text-dark">{{$check_signature_step_1->user->name}}</p>
-                                        </div>
-                                    </div>
-                                </div>
-
-                            </div>
-                        </div>
-                        @if($depthead_area_terkait->departments_count == $check_signature_step_2_count)
-                            @foreach($signature_reviews as $review)
-                                <div class="card mb-4">
-                                    <h5 class="card-header bg-dark text-white">Dept Head Area Terkait {{$review->review->department->txtNamaDept}}</h5>
-                                    <div class="card-body">
-                                        <div class="row">
-                                            <div class="col-lg-3">
-                                                <p class="text-center text-dark card-header">Dibuat Oleh</p>
-                                                <div class="text-center">
-                                                    <img src="{{asset('storage/uploads/signature/'. $cmf->user->signature)}}" alt="" height="80" class="mb-2">
-                                                    <p class="text-dark">{{$cmf->user->name}}</p>
-                                                </div>
+            @if($check_signature_step_1 != null)
+                @if($check_signature_step_1->is_signature == 1)
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="card mb-4">
+                                <h5 class="card-header bg-dark text-white">Dept Head PIC</h5>
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-lg-3">
+                                            <p class="text-center text-dark card-header">Dibuat Oleh</p>
+                                            <div class="text-center">
+                                                <img src="{{asset('storage/uploads/signature/'. $cmf->user->signature)}}" alt="" height="80" class="mb-2">
+                                                <p class="text-dark">{{$cmf->user->name}}</p>
                                             </div>
-                                            <div class="col-lg-6">
-                                                <p class="card-header text-center text-dark">Catatan Depthead {{$review->review->department->txtNamaDept}}</p>
+                                        </div>
+                                        <div class="col-lg-6">
+                                            <p class="card-header text-center text-dark">Catatan Depthead PIC</p>
+                                            <p>{{$check_signature_step_1->catatan ?? 'Tidak ada catatan'}}</p>
+                                        </div>
+                                        <div class="col-lg-3">
+                                            <p class="text-center text-dark card-header">Disetujui Oleh</p>
+                                            <div class="text-center">
+                                                <img src="{{asset('storage/uploads/signature/'. $check_signature_step_1->user->signature)}}" alt="" height="80">
+                                                <p class="text-dark">{{$check_signature_step_1->user->name}}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                            @if($depthead_area_terkait->departments_count == $check_signature_step_2_count)
+                                @foreach($signature_reviews as $review)
+                                    @if($review->is_signature == 1)
+                                        <div class="card mb-4">
+                                            <h5 class="card-header bg-dark text-white">Dept Head Area Terkait {{$review->review->department->txtNamaDept}}</h5>
+                                            <div class="card-body">
+                                                <div class="row">
+                                                    <div class="col-lg-3">
+                                                        <p class="text-center text-dark card-header">Dibuat Oleh</p>
+                                                        <div class="text-center">
+                                                            <img src="{{asset('storage/uploads/signature/'. $cmf->user->signature)}}" alt="" height="80" class="mb-2">
+                                                            <p class="text-dark">{{$cmf->user->name}}</p>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-lg-6">
+                                                        <p class="card-header text-center text-dark">Catatan Depthead {{$review->review->department->txtNamaDept}}</p>
+                                                        <p>{{$review->review->review ?? 'Tidak ada review'}}</p>
+                                                    </div>
+                                                    <div class="col-lg-3">
+                                                        <p class="text-center text-dark card-header">Disetujui Oleh</p>
+                                                        <div class="text-center">
+                                                            <img src="{{asset('storage/uploads/signature/'. $review->user->signature)}}" alt="" height="80">
+                                                            <p class="text-dark">{{$review->review->signature->user->name}}</p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    @endif
+                                    @if($review->is_signature == 0)
+                                        <div class="card mb-4">
+                                            <h5 class="card-header bg-danger text-white">Dept Head Area Terkait {{$review->review->department->txtNamaDept}} Tidak Menyetujui</h5>
+                                            <div class="card-body">
+                                                <p class="card-header text-center text-dark">Review Depthead {{$review->review->department->txtNamaDept}}</p>
                                                 <p>{{$review->review->review ?? 'Tidak ada review'}}</p>
                                             </div>
-                                            <div class="col-lg-3">
-                                                <p class="text-center text-dark card-header">Disetujui Oleh</p>
-                                                <div class="text-center">
-                                                    <img src="{{asset('storage/uploads/signature/'. $review->user->signature)}}" alt="" height="80">
-                                                    <p class="text-dark">{{$review->review->signature->user->name}}</p>
-                                                </div>
-                                            </div>
                                         </div>
-
-                                    </div>
-                                </div>
-                            @endforeach
-                        @endif
+                                    @endif
+                                @endforeach
+                            @endif
+                        </div>
                     </div>
-                </div>
+                @else
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="alert alert-danger">Depthead PIC tidak menyetujui</div>
+                        </div>
+                    </div>
+                @endif
             @endif
             <div class="card mb-4">
                 <div class="card-body">
@@ -578,15 +743,29 @@
                             </div>
                         @endif
                     @else
-                        @if($check_signature_step_4)
+                        @if($check_signature_step_4 != null)
                             <div class="d-block d-grid gap-2">
                                 <button type="button" class="btn btn-success mb-3" data-bs-toggle="modal" data-bs-target="#requestModalMr">Setuju</button>
                                 <button type="button" class="btn btn-danger mb-3" data-bs-toggle="modal" data-bs-target="#dontRequestModalMr">Tidak Setuju</button>
                             </div>
                         @else
-                            <div class="alert alert-danger">
-                                Request perubahan CMF belum disetejui oleh MNF
-                            </div>
+                            @if($check_signature_step_1 != null)
+                                @if($check_signature_step_1->is_signature == 0)
+                                    <div class="alert alert-danger">
+                                        Request perubahan CMF tidak disetejui oleh Depthead PIC
+                                    </div>
+                                @else
+                                    @if($check_signature_step_4 != null)
+                                        @if($check_signature_step_4->is_signature == 0)
+                                            <div class="alert alert-danger">
+                                                Request perubahan CMF belum disetujui oleh MNF
+                                            </div>
+                                        @endif
+                                    @endif
+                                @endif
+                            @else
+                                <div class="alert alert-danger">Harap tunggu karena proses ini dilakukan secara berurutan</div>
+                            @endif
                         @endif
                     @endif
                 </div>
