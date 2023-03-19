@@ -44,6 +44,26 @@
                         <div class="row mb-4">
                             <div class="col-lg-6">
                                 <div class="form-group">
+                                    <label for="password" class="form-label">Password<span class="text-danger">*</span></label>
+                                    <input type="password" name="password" id="password" class="form-control @error('password') is-invalid @enderror" placeholder="Masukkan password">
+                                    @error('password')
+                                    <div class="invalid-feedback">{{$message}}</div>
+                                    @enderror
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="form-group">
+                                    <label for="password_confirmation" class="form-label">Konfirmasi Password<span class="text-danger">*</span></label>
+                                    <input type="password" name="password_confirmation" id="password_confirmation" class="form-control @error('password_confirmation') is-invalid @enderror" placeholder="Masukkan password Konfirmasi">
+                                    @error('password_confirmation')
+                                    <div class="invalid-feedback">{{$message}}</div>
+                                    @enderror
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mb-4">
+                            <div class="col-lg-6">
+                                <div class="form-group">
                                     <label for="department" class="form-label">Department<span class="text-danger">*</span></label>
                                     <select name="department" id="department" class="form-select @error('department') is-invalid @enderror">
                                         @foreach($departments as $department)

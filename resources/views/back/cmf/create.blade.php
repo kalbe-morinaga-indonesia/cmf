@@ -7,11 +7,11 @@
     <form action="{{route('cmf.store')}}" method="post" class="needs-validation" enctype="multipart/form-data" novalidate>
         @csrf
         <div class="row mb-4">
-            <div class="col-lg-8">
+            <div class="col-lg-12">
                 <div class="card mb-4">
                     <div class="card-body">
                         <div class="row mb-4">
-                            <div class="col-lg-6">
+                            <div class="col-lg-4">
                                 <div class="form-group">
                                     <label for="department" class="form-label">Department</label>
                                     <input type="text" name="department" id="department" class="form-control @error('department') is-invalid @enderror" value="{{$department}}" readonly>
@@ -20,7 +20,16 @@
                                     @enderror
                                 </div>
                             </div>
-                            <div class="col-lg-6">
+                            <div class="col-lg-4">
+                                <div class="form-group">
+                                    <label for="tanggal" class="form-label">Tanggal</label>
+                                    <input type="date" name="tanggal" id="tanggal" class="form-control @error('tanggal') is-invalid @enderror" value="{{old('tanggal')}}">
+                                    @error('tanggal')
+                                    <div class="invalid-feedback">{{$message}}</div>
+                                    @enderror
+                                </div>
+                            </div>
+                            <div class="col-lg-4">
                                 <div class="form-group">
                                     <label for="no_cmf" class="form-label">No CMF</label>
                                     <input type="text" name="no_cmf" id="no_cmf" class="form-control @error('no_cmf') is-invalid @enderror" value="{{$no_cmf}}" readonly>
@@ -31,7 +40,7 @@
                             </div>
                         </div>
                         <div class="row mb-4">
-                            <div class="col-lg-6">
+                            <div class="col-lg-12">
                                 <div class="form-group">
                                     <label for="judul_perubahan" class="form-label">Judul Perubahan</label>
                                     <input type="text" name="judul_perubahan" id="judul_perubahan" class="form-control @error('judul_perubahan') is-invalid @enderror" value="{{old('judul_perubahan')}}">
@@ -40,16 +49,27 @@
                                     @enderror
                                 </div>
                             </div>
-                            <div class="col-lg-6">
+                        </div>
+                        <div class="row mb-4">
+                            <div class="col-lg-12">
                                 <div class="form-group">
                                     <label for="perubahan" class="form-label">Perubahan</label>
-                                    <select name="perubahan" id="perubahan" class="form-select">
-                                        <option>Pilih</option>
-                                        <option value="Mesin">Mesin</option>
-                                        <option value="Proses">Proses</option>
-                                        <option value="Sistem">Sistem</option>
-                                        <option value="Lainnya">Lainnya</option>
-                                    </select>
+                                    <br>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" name="perubahan" type="radio" id="mesin" value="Mesin">
+                                        <label class="form-check-label" for="mesin">Mesin</label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" name="perubahan" type="radio" id="proses" value="Proses">
+                                        <label class="form-check-label" for="proses">Proses</label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" name="perubahan" type="radio" id="system" value="System">
+                                        <label class="form-check-label" for="system">System</label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-control" name="perubahan" type="text" placeholder="Lainnya">
+                                    </div>
                                     @error('perubahan')
                                     <div class="invalid-feedback">{{$message}}</div>
                                     @enderror
@@ -57,19 +77,69 @@
                             </div>
                         </div>
                         <div class="row mb-4">
-                            <div class="col-lg-6">
-                                <div class="form-group">
-                                    <label for="tanggal" class="form-label">Tanggal</label>
-                                    <input type="date" name="tanggal" id="tanggal" class="form-control @error('tanggal') is-invalid @enderror" value="{{old('tanggal')}}">
-                                    @error('tanggal')
-                                    <div class="invalid-feedback">{{$message}}</div>
-                                    @enderror
-                                </div>
-                            </div>
-                            <div class="col-lg-6">
+                            <div class="col-lg-12">
                                 <div class="form-group">
                                     <label for="jenis_perubahan" class="form-label">Jenis Perubahan</label>
-                                    <input type="text" name="jenis_perubahan" id="jenis_perubahan" class="form-control @error('jenis_perubahan') is-invalid @enderror" value="{{old('jenis_perubahan')}}">
+                                    <br>
+                                    <div class="row">
+                                        <div class="col-lg-3">
+                                            <div class="form-check form-check-inline mb-3">
+                                                <input class="form-check-input" name="jenis_perubahan" type="radio" id="Instalasi" value="Instalasi">
+                                                <label class="form-check-label" for="Instalasi">Instalasi</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-3">
+                                            <div class="form-check form-check-inline mb-3">
+                                                <input class="form-check-input" name="jenis_perubahan" type="radio" id="Formula" value="Formula">
+                                                <label class="form-check-label" for="Formula">Formula</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-3">
+                                            <div class="form-check form-check-inline mb-3">
+                                                <input class="form-check-input" name="jenis_perubahan" type="radio" id="raw" value="Raw Material">
+                                                <label class="form-check-label" for="raw">Raw Material</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-3">
+                                            <div class="form-check form-check-inline mb-3">
+                                                <input class="form-check-input" name="jenis_perubahan" type="radio" id="packaging" value="Packaging Material">
+                                                <label class="form-check-label" for="packaging">Packaging Material</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-3">
+                                            <div class="form-check form-check-inline mb-3">
+                                                <input class="form-check-input" name="jenis_perubahan" type="radio" id="Spesifikasi" value="Spesifikasi Produk">
+                                                <label class="form-check-label" for="Spesifikasi">Spesifikasi Produk</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-3">
+                                            <div class="form-check form-check-inline mb-3">
+                                                <input class="form-check-input" name="jenis_perubahan" type="radio" id="food" value="Food Safety Management">
+                                                <label class="form-check-label" for="food">Food Safety Management</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-3">
+                                            <div class="form-check form-check-inline mb-3">
+                                                <input class="form-check-input" name="jenis_perubahan" type="radio" id="Oracle" value="Oracle">
+                                                <label class="form-check-label" for="Oracle">Oracle</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-3">
+                                            <div class="form-check form-check-inline mb-3">
+                                                <input class="form-check-input" name="jenis_perubahan" type="radio" id="SMK3" value="SMK3">
+                                                <label class="form-check-label" for="SMK3">SMK3</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-3">
+                                            <div class="form-check form-check-inline mb-3">
+                                                <input class="form-check-input" name="jenis_perubahan" type="radio" id="Halal" value="Halal Management">
+                                                <label class="form-check-label" for="Halal">Halal Management</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-3">
+                                            <input class="form-control" name="jenis_perubahan" type="text" placeholder="Lainnya">
+                                        </div>
+                                    </div>
                                     @error('jenis_perubahan')
                                     <div class="invalid-feedback">{{$message}}</div>
                                     @enderror
@@ -80,8 +150,8 @@
                             <div class="col-lg-6">
                                 <div class="form-group">
                                     <label for="targer_implementasi" class="form-label">Target Implementasi</label>
-                                    <input type="date" name="target_implementasi" id="target_implementasi" class="form-control @error('targer_implementasi') is-invalid @enderror" value="{{old('targer_implementasi')}}">
-                                    @error('targer_implementasi')
+                                    <input type="date" name="target_implementasi" id="target_implementasi" class="form-control @error('target_implementasi') is-invalid @enderror" value="{{old('target_implementasi')}}">
+                                    @error('target_implementasi')
                                     <div class="invalid-feedback">{{$message}}</div>
                                     @enderror
                                 </div>
@@ -89,10 +159,20 @@
                             <div class="col-lg-6">
                                 <div class="form-group">
                                     <label for="tipe_perubahan" class="form-label">Tipe Perubahan</label>
-                                    <select name="tipe_perubahan" id="tipe_perubahan" class="form-select @error('tipe_perubahan') is-invalid @enderror">
-                                        <option value="Permanent">Permanent</option>
-                                        <option value="Temporary">Temporary</option>
-                                    </select>
+                                    <div class="row mt-2">
+                                        <div class="col-lg-6">
+                                            <div class="form-check form-check-inline">
+                                                <input class="form-check-input" name="tipe_perubahan" type="radio" id="Permanent" value="Permanent">
+                                                <label class="form-check-label" for="Permanent">Permanent</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-6">
+                                            <div class="form-check form-check-inline">
+                                                <input class="form-check-input" name="tipe_perubahan" type="radio" id="Temporary" value="Temporary">
+                                                <label class="form-check-label" for="Temporary">Temporary</label>
+                                            </div>
+                                        </div>
+                                    </div>
                                     @error('tipe_perubahan')
                                     <div class="invalid-feedback">{{$message}}</div>
                                     @enderror
@@ -127,30 +207,17 @@
                             </div>
                         </div>
                         <div class="row mb-4">
-                            <div class="col-lg-6">
+                            <div class="col-lg-12">
                                 <div class="form-group">
                                     <label for="area_terkait" class="form-label">Area Terkait</label>
-                                    <select name="area_terkait[]" id="area_terkait" class="select2-multiple form-select @error('area_terkait') is-invalid @enderror" multiple>
-                                        <optgroup label="Subdepartment"
-                                        @foreach($subdepartments as $subdepartment)
-                                            <option value="{{$subdepartment->id}}">{{$subdepartment->txtNamaSubDept}}</option>
-                                        @endforeach
-                                    </select>
+                                    <br>
+                                    @foreach($subdepartments as $subdepartment)
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" name="area_terkait[]" type="checkbox" id="{{$subdepartment->id}}" value="{{$subdepartment->id}}">
+                                            <label class="form-check-label" for="{{$subdepartment->id}}">{{$subdepartment->txtNamaSubDept}}</label>
+                                        </div>
+                                    @endforeach
                                     @error('area_terkait')
-                                    <div class="invalid-feedback">{{$message}}</div>
-                                    @enderror
-                                </div>
-                            </div>
-                            <div class="col-lg-6">
-                                <div class="form-group">
-                                    <label for="konfirmasi_department_area_terkait" class="form-label">Konfirmasi Department Area Terkait</label>
-                                    <select name="konfirmasi_department_area_terkait[]" id="konfirmasi_department_area_terkait" class="select2-multiple-department form-select @error('konfirmasi_department_area_terkait') is-invalid @enderror" multiple>
-                                        <optgroup label="Department"
-                                        @foreach($departments as $department)
-                                            <option value="{{$department->id}}">{{$department->txtNamaDept}}</option>
-                                        @endforeach
-                                    </select>
-                                    @error('konfirmasi_department_area_terkait')
                                     <div class="invalid-feedback">{{$message}}</div>
                                     @enderror
                                 </div>
@@ -160,14 +227,7 @@
                 </div>
 
             </div>
-            <div class="col-lg-4">
-                <div class="card mb-4">
-                    <div class="card-body">
-                        <div class="text-center">
-                            <button type="submit" class="btn btn-primary">Save Changes</button>
-                        </div>
-                    </div>
-                </div>
+            <div class="col-lg-12">
                 <div class="card mb-5 card-parent" >
                     <h5 class="card-header">Risk Assessment :</h5>
                     <hr class="my-0" />
@@ -281,6 +341,13 @@
                                 <i class="bx bx-add-to-queue me-2"></i>
                                 Tambah Risk
                             </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <div class="text-center">
+                            <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
                         </div>
                     </div>
                 </div>
